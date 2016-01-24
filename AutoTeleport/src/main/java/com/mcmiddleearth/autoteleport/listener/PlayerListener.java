@@ -16,7 +16,17 @@
  */
 package com.mcmiddleearth.autoteleport.listener;
 
+import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
+import com.mcmiddleearth.autoteleport.data.PluginData;
+import com.mcmiddleearth.autoteleport.data.TeleportationArea;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -24,4 +34,48 @@ import org.bukkit.event.Listener;
  */
 public class PlayerListener implements Listener{
     
+     @EventHandler
+     public void playerMove(PlayerMoveEvent event) {
+         if(PluginData.isStopped()) {
+             return;
+         }
+         Player player = event.getPlayer();
+         Location playerLocation = player.getLocation();
+         for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
+             if(area.getTarget()!=null && area.isInside(playerLocation)) {
+                 if(area.getTarget().getWorld().equals(playerLocation.getWorld())
+                        && area.isDynamic()) {
+                    Vector shift = new Vector(area.getTarget().getBlockX()-area.getCenter().getBlockX(),
+                                              area.getTarget().getBlockY()-area.getCenter().getBlockY(),
+                                              area.getTarget().getBlockZ()-area.getCenter().getBlockZ());
+                    String commandString = "tp "+player.getName()+" ~"
+                                  +shift.getBlockX()+ " ~"
+                                  +shift.getBlockY()+ " ~"
+                                  +shift.getBlockZ();
+                    if(!area.isKeepOrientation()) {
+                        commandString = commandString +" "+ area.getTarget().getYaw()+ " "
+                                                                   + area.getTarget().getPitch();
+                    }
+                    final String cmdString = commandString;
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmdString);
+                        }
+                    }.runTaskLater(AutoTeleportPlugin.getPluginInstance(), 1);
+                 }
+                 else {
+                    Location target = area.getTarget().clone();
+                    target.setX(target.getBlockX()-area.getCenter().getBlockX()+playerLocation.getX());
+                    target.setY(target.getBlockY()-area.getCenter().getBlockY()+playerLocation.getY());
+                    target.setZ(target.getBlockZ()-area.getCenter().getBlockZ()+playerLocation.getZ());
+                    if(area.isKeepOrientation()) {
+                        target.setPitch(playerLocation.getPitch());
+                        target.setYaw(playerLocation.getYaw());
+                    }
+                    player.teleport(target);
+                 }
+             }
+         }
+     }
 }

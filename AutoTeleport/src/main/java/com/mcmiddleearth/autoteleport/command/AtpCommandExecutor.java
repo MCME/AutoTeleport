@@ -20,6 +20,7 @@ import com.mcmiddleearth.autoteleport.util.MessageUtil;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,18 +30,25 @@ import org.bukkit.command.CommandSender;
  *
  * @author Eriol_Eandur
  */
-public class AteleCommandExecutor implements CommandExecutor {
+public class AtpCommandExecutor implements CommandExecutor {
 
     @Getter
-    private final Map <String, AbstractCommand> commands = new LinkedHashMap <>();
+    private final Map <String, AtpCommand> commands = new LinkedHashMap <>();
     
-    public AteleCommandExecutor() {
-        //addCommandHandler("create", new GameCreate("minigames.manager"));
+    private final String permission = "autoteleport.user";
+    public AtpCommandExecutor() {
+        addCommandHandler("delete", new AtpDelete(permission));
+        addCommandHandler("details", new AtpDetails(permission));
+        addCommandHandler("help", new AtpHelp(permission));
+        addCommandHandler("list", new AtpList(permission));
+        addCommandHandler("set", new AtpSet(permission));
+        addCommandHandler("size", new AtpSize(permission));
+        addCommandHandler("target", new AtpTarget(permission));
     }
     
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] strings) {
-        if(!string.equalsIgnoreCase("game")) {
+        if(!string.equalsIgnoreCase("atp")) {
             return false;
         }
         if(strings == null || strings.length == 0) {
@@ -63,7 +71,8 @@ public class AteleCommandExecutor implements CommandExecutor {
         MessageUtil.sendErrorMessage(cs, "Subcommand not found.");
     }
     
-    private void addCommandHandler(String name, AbstractCommand handler) {
+    private void addCommandHandler(String name, AtpCommand handler) {
         commands.put(name, handler);
     }
+    
 }

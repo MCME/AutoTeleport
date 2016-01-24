@@ -5,15 +5,15 @@ description: automated teleportation plugin
 load: POSTWORLD
 softdepend: [Multiverse-Core]
 commands:
-    atele:
-        description: manage MiniGames plugin
-        usage: TBA
+    atp:
+        description: manage auto teleport areas
+        usage: invalid subcommand
 permissions:
     autoteleport.*:
-        description: Gives access to all miniGames commands
+        description: Gives access to all auto teleport commands
         default: op
         children:
-            autoteleport.staff: true
-    autoteleport.staff:
-        description: Gives access to /game delete command
+            autoteleport.user: true
+    autoteleport.user:
+        description: gives access to /atp command
         default: op

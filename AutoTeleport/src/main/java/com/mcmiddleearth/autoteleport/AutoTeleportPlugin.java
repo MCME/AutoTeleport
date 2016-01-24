@@ -16,8 +16,10 @@
  */
 package com.mcmiddleearth.autoteleport;
 
-import com.mcmiddleearth.autoteleport.command.AteleCommandExecutor;
+import com.mcmiddleearth.autoteleport.command.AtpCommandExecutor;
+import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.listener.PlayerListener;
+import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,8 +35,9 @@ public class AutoTeleportPlugin extends JavaPlugin{
     @Override
     public void onEnable() {
         pluginInstance = this;
+        PluginData.loadData();
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getCommand("atele").setExecutor(new AteleCommandExecutor());
+        getCommand("atp").setExecutor(new AtpCommandExecutor());
         getLogger().info("Enabled!");
     }
 }

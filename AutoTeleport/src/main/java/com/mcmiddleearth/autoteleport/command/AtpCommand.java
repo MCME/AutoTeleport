@@ -8,6 +8,7 @@ package com.mcmiddleearth.autoteleport.command;
 import com.mcmiddleearth.autoteleport.util.MessageUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player;
  *
  * @author Eriol_Eandur, Ivanpl
  */
-public abstract class AbstractCommand {
+public abstract class AtpCommand {
     
     private final String[] permissionNodes;
     
@@ -28,7 +29,7 @@ public abstract class AbstractCommand {
     @Setter
     private String usageDescription, shortDescription;
     
-    public AbstractCommand(int minArgs, boolean playerOnly, String... permissionNodes) {
+    public AtpCommand(int minArgs, boolean playerOnly, String... permissionNodes) {
         this.minArgs = minArgs;
         this.playerOnly = playerOnly;
         this.permissionNodes = permissionNodes;
@@ -68,7 +69,7 @@ public abstract class AbstractCommand {
         MessageUtil.sendErrorMessage(cs, "You don't have permission to run this command.");
     }
     
-    private void sendMissingArgumentErrorMessage(CommandSender cs) {
+    protected void sendMissingArgumentErrorMessage(CommandSender cs) {
         MessageUtil.sendErrorMessage(cs, "You're missing arguments for this command.");
     }
     
@@ -83,4 +84,19 @@ public abstract class AbstractCommand {
         return true;
     }
     
+    protected void sendNoAreaErrorMessage(CommandSender cs) {
+        MessageUtil.sendErrorMessage(cs, "No teleportation area with that name.");
+    }
+
+    protected void sendDynamicToStaticMessage(CommandSender cs) {
+        MessageUtil.sendInfoMessage(cs, ChatColor.GOLD+"Center and target location will be in different worlds. Teleportation type will be static.");
+    }
+    
+    protected void sentIvalidArgumentMessage(CommandSender cs) {
+        MessageUtil.sendErrorMessage(cs, "Invalid shape Argument");
+    }
+
+    protected void sendIOErrorMessage(CommandSender cs) {
+        MessageUtil.sendErrorMessage(cs, "There was an error. Teleportation data were NOT saved.");
+    }
 }
