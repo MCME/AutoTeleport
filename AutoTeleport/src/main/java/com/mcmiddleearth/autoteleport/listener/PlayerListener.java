@@ -36,7 +36,7 @@ public class PlayerListener implements Listener{
     
      @EventHandler
      public void playerMove(PlayerMoveEvent event) {
-         if(PluginData.isStopped()) {
+         if(PluginData.isStopped() || PluginData.isExcluded(event.getPlayer())) {
              return;
          }
          Player player = event.getPlayer();

@@ -21,9 +21,9 @@ import org.bukkit.entity.Player;
 public class AtpTarget extends AtpCommand{
     
     public AtpTarget(String... permissionNodes) {
-        super(2, true, permissionNodes);
+        super(1, true, permissionNodes);
         setShortDescription(": Defines a teleporation target.");
-        setUsageDescription(" <AreaName> <type> [keepOrientation]: Defines the teleportation target for area <AreaName>. Type can be 'dynamic' or 'static'. Only 'dynamic' will keep speed of player. If keepOrientation is false the players orientation will be set to saved orientation, otherwise it will be unchanged.");
+        setUsageDescription(" <AreaName> [type] [keepOrientation]: Defines the teleportation target for area <AreaName>. [Type] can be 'dynamic' or 'static'. Only 'dynamic' will keep speed of player. Default is 'dynamic' for in world teleport and 'static' for multi world teleport. If [keepOrientation] is false the player orientation will be set to saved orientation, otherwise it will be unchanged.");
     }
     
     @Override
@@ -33,22 +33,33 @@ public class AtpTarget extends AtpCommand{
             sendNoAreaErrorMessage(cs);
         }
         else {
-            boolean dynamic = args[1].equalsIgnoreCase("dynamic");
+            boolean dynamic = true;
+            boolean dynamicByDefault = true;
+            boolean keepOrientation = true;
+            for(int i = 1; i< args.length;i++) {
+                if(args[i].equalsIgnoreCase("static")) {
+                    dynamic = false;
+                }
+                else if(args[i].equalsIgnoreCase("false")) {
+                    keepOrientation = false;
+                }
+                else if(args[i].equalsIgnoreCase("dynamic")) {
+                    dynamic = true;
+                    dynamicByDefault = false;
+                }
+                else if(!(args[i].equalsIgnoreCase("true"))) {
+                    sentInvalidArgumentMessage(cs);
+                    return;
+                }
+            }
             if(dynamic && !area.getCenter().getWorld().equals(((Player)cs).getWorld())) {
                 dynamic = false;
-                sendDynamicToStaticMessage(cs);
+                if(!dynamicByDefault) {
+                    sendDynamicToStaticMessage(cs);
+                }
             }
             area.setTarget(((Player)cs).getLocation());
             area.setDynamic(dynamic);
-            boolean keepOrientation = true;
-            if(args.length>2) {
-                if(args[2].equalsIgnoreCase("false")) {
-                    keepOrientation = false;
-                }
-                else if(!args[2].equalsIgnoreCase("true")) {
-                    sentIvalidArgumentMessage(cs);
-                }
-            }
             area.setKeepOrientation(keepOrientation);
             try {
                 PluginData.saveData();

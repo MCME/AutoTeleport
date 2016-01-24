@@ -95,6 +95,9 @@ public abstract class TeleportationArea {
     }
     
     private static Location deserializeLocation(ConfigurationSection data) {
+        if(data == null) {
+            return null;
+        }
         World world = Bukkit.getWorld(data.getString("world"));
         if(world == null) {
             return null;

@@ -47,7 +47,8 @@ public class SphericalTeleportationArea extends TeleportationArea {
 
     @Override
     public boolean isInside(Location loc) {
-        return getCenter().distance(loc) <= radius;
+        return getCenter().getWorld().equals(loc.getWorld())
+            && getCenter().distance(loc) <= radius;
     }
     
     @Override

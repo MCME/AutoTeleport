@@ -16,6 +16,7 @@
  */
 package com.mcmiddleearth.autoteleport.util;
 
+import java.util.Map;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,6 +32,8 @@ public class MessageUtil {
     
     @Getter
     private static final String PREFIX   = "[AutoTeleport] ";
+    
+    @Getter
     private static final String NOPREFIX = "    ";
     
     public static void sendErrorMessage(CommandSender sender, String message) {
@@ -60,5 +63,35 @@ public class MessageUtil {
     public static void sendBroadcastMessage(String string) {
         Bukkit.getServer().broadcastMessage(ChatColor.AQUA + PREFIX + string);
     }
+
+    public static void sendClickableMessage(Player sender, String message, String onClickCommand) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw "+ sender.getName()+" "
+                +"{ text:\""+message+"\", "
+                  +"clickEvent:{ action:run_command,"
+                               + "value:\""+ onClickCommand +"\"}}");
+    }
+        
+    public static void sendClickableMessage(Player sender, Map<String,String> data) {
+        String rawText = "tellraw "+ sender.getName()+" [";
+        boolean first = true;
+        for(String message: data.keySet()) {
+            if(first) {
+                first = false; 
+            }
+            else {
+                rawText = rawText.concat(",");
+            }
+            rawText = rawText.concat("{text:\""+message+"\"");
+            String command = data.get(message);
+            if(command!=null) {
+                rawText = rawText.concat(",clickEvent:{ action:run_command,value:\"");
+                rawText = rawText.concat(command+"\"}");
+            }
+            rawText = rawText.concat("}");
+        }
+        rawText = rawText.concat("]");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), rawText);
+    }
+        
 
 }

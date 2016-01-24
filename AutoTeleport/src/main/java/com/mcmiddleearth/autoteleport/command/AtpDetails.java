@@ -13,6 +13,7 @@ import com.mcmiddleearth.autoteleport.util.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -34,11 +35,13 @@ public class AtpDetails extends AtpCommand{
         }
         else {
             MessageUtil.sendInfoMessage(cs, "Details for teleportation area "+args[0]+".");
-            MessageUtil.sendNoPrefixInfoMessage(cs, ChatColor.YELLOW
-                                                   +"Center: "+ area.getCenter().getWorld().getName()
+            MessageUtil.sendClickableMessage((Player)cs, MessageUtil.getNOPREFIX()+ChatColor.GOLD
+                                                   +"Center"+ChatColor.YELLOW
+                                                   +": "+ area.getCenter().getWorld().getName()
                                                    +" "+area.getCenter().getBlockX()
                                                    +" "+area.getCenter().getBlockY()
-                                                   +" "+area.getCenter().getBlockZ());
+                                                   +" "+area.getCenter().getBlockZ(),
+                                              "/atp warp "+args[0]);
             if(area instanceof CuboidTeleportationArea) {
                 CuboidTeleportationArea cuboid = (CuboidTeleportationArea)area;
                 MessageUtil.sendNoPrefixInfoMessage(cs, ChatColor.YELLOW+"Cuboid area with"
@@ -53,11 +56,13 @@ public class AtpDetails extends AtpCommand{
             }
             Location target = area.getTarget();
             if(target!=null) {
-                MessageUtil.sendNoPrefixInfoMessage(cs,  ChatColor.YELLOW
-                                                       +"Target: "+ area.getTarget().getWorld().getName()
+                MessageUtil.sendClickableMessage((Player)cs, MessageUtil.getNOPREFIX()+ChatColor.GOLD
+                                                       +"Target"+ ChatColor.YELLOW
+                                                       +": "+ area.getTarget().getWorld().getName()
                                                        +" x: "+area.getTarget().getBlockX()
                                                        +" y: "+area.getTarget().getBlockY()
-                                                       +" z: "+area.getTarget().getBlockZ());
+                                                       +" z: "+area.getTarget().getBlockZ(),
+                                                 "/atp warp "+args[0]+" target");
             }
             else {
                 MessageUtil.sendNoPrefixInfoMessage(cs,  ChatColor.YELLOW+ "Target: NO TARGET"); 

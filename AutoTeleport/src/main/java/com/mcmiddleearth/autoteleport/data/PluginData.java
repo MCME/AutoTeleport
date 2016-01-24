@@ -19,16 +19,22 @@ package com.mcmiddleearth.autoteleport.data;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -38,6 +44,8 @@ public class PluginData {
     
     @Getter
     private static Map<String, TeleportationArea> teleportAreas = new HashMap<>();
+    
+    private static List<UUID> excludedPlayers = new ArrayList<>();
     
     @Getter
     @Setter
@@ -67,6 +75,29 @@ public class PluginData {
     
     public static boolean hasTeleportationArea(String name) {
         return teleportAreas.get(name)!=null;
+    }
+    
+    public static void exclude(Player player) {
+        excludedPlayers.add(player.getUniqueId());
+    }
+    
+    public static void include(Player player) {
+        excludedPlayers.remove(player.getUniqueId());
+    }
+    
+    public static void includeAll() {
+        excludedPlayers.clear();
+    }
+    
+    public static boolean isExcluded(Player player) {
+        return excludedPlayers.contains(player.getUniqueId());
+    }
+    public static List<OfflinePlayer> excludedPlayers() {
+        List<OfflinePlayer> result = new ArrayList<>();
+        for(UUID id:excludedPlayers) {
+            result.add(Bukkit.getOfflinePlayer(id));
+        }
+        return result;
     }
     
     public static void saveData() throws IOException {

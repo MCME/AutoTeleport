@@ -92,8 +92,8 @@ public abstract class AtpCommand {
         MessageUtil.sendInfoMessage(cs, ChatColor.GOLD+"Center and target location will be in different worlds. Teleportation type will be static.");
     }
     
-    protected void sentIvalidArgumentMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "Invalid shape Argument");
+    protected void sentInvalidArgumentMessage(CommandSender cs) {
+        MessageUtil.sendErrorMessage(cs, "Invalid Argument");
     }
 
     protected void sendIOErrorMessage(CommandSender cs) {

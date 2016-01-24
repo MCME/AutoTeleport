@@ -53,7 +53,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
                 cuboid = false;
             }
             else if(!args[1].equalsIgnoreCase("cuboid")) {
-                sentIvalidArgumentMessage(cs);
+                sentInvalidArgumentMessage(cs);
             }
         }
         if(area==null) {
@@ -79,6 +79,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
                 new ConfirmationFactory(AutoTeleportPlugin.getPluginInstance()).start((Player) cs, 
                         "Specified shape differs from current shape. "+
                         "You will need to define area size again. Do you want to continue?", this);
+                return;
             }
             area.setCenter(center);
             area.setDynamic(newDynamic);

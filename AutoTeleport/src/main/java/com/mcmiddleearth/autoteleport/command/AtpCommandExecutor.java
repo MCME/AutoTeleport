@@ -20,7 +20,6 @@ import com.mcmiddleearth.autoteleport.util.MessageUtil;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,6 +43,11 @@ public class AtpCommandExecutor implements CommandExecutor {
         addCommandHandler("set", new AtpSet(permission));
         addCommandHandler("size", new AtpSize(permission));
         addCommandHandler("target", new AtpTarget(permission));
+        addCommandHandler("warp", new AtpWarp(permission));
+        addCommandHandler("on", new AtpOn(permission));
+        addCommandHandler("off", new AtpOff(permission));
+        addCommandHandler("exclude", new AtpExclude(permission));
+        addCommandHandler("include", new AtpInclude(permission));
     }
     
     @Override
