@@ -24,7 +24,7 @@ public class AtpOn extends AtpCommand{
     @Override
     protected void execute(CommandSender cs, String... args) {
         PluginData.setStopped(false);
-        MessageUtil.sendInfoMessage(cs, "Automated teleport ctivated.");
+        MessageUtil.sendInfoMessage(cs, "Automated teleport activated.");
     }
     
 }

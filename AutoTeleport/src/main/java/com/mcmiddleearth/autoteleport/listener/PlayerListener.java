@@ -43,7 +43,28 @@ public class PlayerListener implements Listener{
          Location playerLocation = player.getLocation();
          for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
              if(area.getTarget()!=null && area.isInside(playerLocation)) {
-                 if(area.getTarget().getWorld().equals(playerLocation.getWorld())
+                Location target = area.getTarget().clone();
+                target.setX(target.getBlockX()-area.getCenter().getBlockX()+playerLocation.getX());
+                target.setY(target.getBlockY()-area.getCenter().getBlockY()+playerLocation.getY());
+                target.setZ(target.getBlockZ()-area.getCenter().getBlockZ()+playerLocation.getZ());
+                if(area.isKeepOrientation()) {
+                    target.setPitch(playerLocation.getPitch());
+                    target.setYaw(playerLocation.getYaw());
+                }
+                final Player play = player;
+                final Location loc = target;
+                final Vector vel = player.getVelocity();
+                final boolean dynamic = area.isDynamic();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        play.teleport(loc);  
+                        if(dynamic) {
+                            play.setVelocity(vel);
+                        }
+                    }
+                }.runTaskLater(AutoTeleportPlugin.getPluginInstance(), 1);
+                /*if(area.getTarget().getWorld().equals(playerLocation.getWorld())
                         && area.isDynamic()) {
                     Vector shift = new Vector(area.getTarget().getBlockX()-area.getCenter().getBlockX(),
                                               area.getTarget().getBlockY()-area.getCenter().getBlockY(),
@@ -63,18 +84,11 @@ public class PlayerListener implements Listener{
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmdString);
                         }
                     }.runTaskLater(AutoTeleportPlugin.getPluginInstance(), 1);
+                     
                  }
                  else {
-                    Location target = area.getTarget().clone();
-                    target.setX(target.getBlockX()-area.getCenter().getBlockX()+playerLocation.getX());
-                    target.setY(target.getBlockY()-area.getCenter().getBlockY()+playerLocation.getY());
-                    target.setZ(target.getBlockZ()-area.getCenter().getBlockZ()+playerLocation.getZ());
-                    if(area.isKeepOrientation()) {
-                        target.setPitch(playerLocation.getPitch());
-                        target.setYaw(playerLocation.getYaw());
-                    }
                     player.teleport(target);
-                 }
+                 }*/
              }
          }
      }
