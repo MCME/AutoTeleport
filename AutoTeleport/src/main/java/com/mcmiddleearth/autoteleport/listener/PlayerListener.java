@@ -65,31 +65,6 @@ public class PlayerListener implements Listener{
                         }
                     }
                 }.runTaskLater(AutoTeleportPlugin.getPluginInstance(), 1);
-                /*if(area.getTarget().getWorld().equals(playerLocation.getWorld())
-                        && area.isDynamic()) {
-                    Vector shift = new Vector(area.getTarget().getBlockX()-area.getCenter().getBlockX(),
-                                              area.getTarget().getBlockY()-area.getCenter().getBlockY(),
-                                              area.getTarget().getBlockZ()-area.getCenter().getBlockZ());
-                    String commandString = "tp "+player.getName()+" ~"
-                                  +shift.getBlockX()+ " ~"
-                                  +shift.getBlockY()+ " ~"
-                                  +shift.getBlockZ();
-                    if(!area.isKeepOrientation()) {
-                        commandString = commandString +" "+ area.getTarget().getYaw()+ " "
-                                                                   + area.getTarget().getPitch();
-                    }
-                    final String cmdString = commandString;
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmdString);
-                        }
-                    }.runTaskLater(AutoTeleportPlugin.getPluginInstance(), 1);
-                     
-                 }
-                 else {
-                    player.teleport(target);
-                 }*/
              }
          }
      }
