@@ -70,11 +70,11 @@ public class AtpHelp extends AtpCommand{
     }
 
     private void sendDescriptionMessage(CommandSender cs, String arg, String description) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "/game "+arg+description);
+        MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+description);
     }
 
     private void sendNoDescriptionMessage(CommandSender cs, String arg) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "/game "+arg+": There is no help for this command.");
+        MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no help for this command.");
     }
 
    private void sendManualMessage(CommandSender cs) {
