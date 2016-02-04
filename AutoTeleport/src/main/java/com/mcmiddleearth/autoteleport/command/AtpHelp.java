@@ -62,11 +62,11 @@ public class AtpHelp extends AtpCommand{
     }
 
     private void sendHelpStartMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Help for minigames plugin.");
+        MessageUtil.sendInfoMessage(cs, "Help for AutoTeleport plugin.");
     }
 
     private void sendNoSuchCommandMessage(CommandSender cs, String arg) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "/game "+arg+": There is no such command.");    
+        MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no such command.");    
     }
 
     private void sendDescriptionMessage(CommandSender cs, String arg, String description) {
