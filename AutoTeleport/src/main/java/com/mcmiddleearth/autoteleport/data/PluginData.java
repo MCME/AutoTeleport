@@ -17,6 +17,7 @@
 package com.mcmiddleearth.autoteleport.data;
 
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
+import com.mcmiddleearth.autoteleport.listener.TeleportationHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -43,9 +43,11 @@ import org.bukkit.entity.Player;
 public class PluginData {
     
     @Getter
-    private static Map<String, TeleportationArea> teleportAreas = new HashMap<>();
+    private final static Map<String, TeleportationArea> teleportAreas = new HashMap<>();
     
-    private static List<UUID> excludedPlayers = new ArrayList<>();
+    private final static List<UUID> excludedPlayers = new ArrayList<>();
+    
+    private final static Map<UUID,TeleportationHandler> currentTeleportations = new HashMap<>();
     
     @Getter
     @Setter
@@ -61,6 +63,18 @@ public class PluginData {
         }
     }
         
+    public static boolean isInTeleportation(Player player) {
+        return currentTeleportations.containsKey(player.getUniqueId());
+    }
+    
+    public static void registerTeleportation(Player player, TeleportationHandler handler) {
+        currentTeleportations.put(player.getUniqueId(), handler);
+    }
+    
+    public static void ungegisterTeleportation(Player player) {
+        currentTeleportations.remove(player.getUniqueId());
+    }
+    
     public static TeleportationArea addTeleportationArea(String name, TeleportationArea newArea) {
         return teleportAreas.put(name, newArea);
     }

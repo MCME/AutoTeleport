@@ -47,6 +47,22 @@ public abstract class TeleportationArea {
     @Setter
     private boolean keepOrientation;
     
+    @Getter
+    @Setter
+    int viewDistance = 160, // Blöcke == 10 chunks
+        firstDelay = 1,
+        teleportDelay = 0,
+        velocityDelay = 2,
+        velocityReps = 1;
+    
+    @Getter
+    @Setter
+    boolean recalculateTarget = false,
+            refreshChunks = false;
+            
+    
+    
+    
     public TeleportationArea(Location center) {
         this.center = center;
     }
