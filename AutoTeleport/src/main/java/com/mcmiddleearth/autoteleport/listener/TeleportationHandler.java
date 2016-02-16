@@ -19,9 +19,6 @@ package com.mcmiddleearth.autoteleport.listener;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import java.util.ArrayList;
-import java.util.List;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,10 +36,6 @@ public class TeleportationHandler {
     
     Location target;
     
-    List<Chunk> chunkList = new ArrayList<>();
-
-    List<ChunkLoadingTask> workList = new ArrayList<>();
-     
     public TeleportationHandler(Player player, TeleportationArea area) {
         this.player = player;
         this.area = area;
@@ -51,19 +44,17 @@ public class TeleportationHandler {
     public void startTeleportation() {
         target = calculateTarget();
         final Vector vel = player.getVelocity();
-        loadTargetChunks();
+        area.loadTargetChunks();
         new BukkitRunnable() {
             
             int waitTics = 0;
             @Override
             public void run() {
-                if(isChunkListLoaded()) {
+                if(area.isChunkListLoaded()) {
                     if(waitTics==0 && area.isRefreshChunks()) {
 player.sendMessage("-----> sending chunk refresh packages");
 //Logger.getGlobal().info("refresh");
-                            for(Chunk chunk: chunkList) {
-                                target.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
-                            }
+                            area.refreshChunks();
                     }
                     if(waitTics<area.getTeleportDelay()) {
 player.sendMessage("-----> waiting....");
@@ -120,69 +111,4 @@ player.sendMessage("-----> waiting for chunk preloading ");
         return newTarget;
     }
 
-    private class ChunkLoadingTask {
-         
-        int shiftX, shiftZ;
-         
-        ChunkLoadingTask(int shiftX, int shiftZ) {
-            this.shiftX = shiftX;
-            this.shiftZ = shiftZ;
-        }
-         
-        void execute() {
-            int viewDist = area.getViewDistance();
-            Chunk chunk = area.getTarget().getWorld().getChunkAt(target.getChunk().getX()+shiftX, 
-                                                                 target.getChunk().getZ()+shiftZ);
-            chunk.load();
-//Logger.getGlobal().info("");
-//Logger.getGlobal().info("load " + (shiftX) +" "+(shiftZ)+ "          step "+(Math.abs(shiftX)+Math.abs(shiftZ)));
-            chunkList.add(chunk);
-            if(shiftX>=0 && shiftX<viewDist && (shiftZ==0 || shiftX<shiftZ || shiftX<-shiftZ)) {
-                workList.add(new ChunkLoadingTask(shiftX+16,shiftZ));
-//Logger.getGlobal().info("add posx "+(shiftX+16)+" "+shiftZ);
-            }
-            if(shiftX<=0 && -shiftX<viewDist && (shiftZ==0 || -shiftX<-shiftZ || -shiftX<shiftZ)) {
-                workList.add(new ChunkLoadingTask(shiftX-16,shiftZ));
-//Logger.getGlobal().info("add negx "+(shiftX-16)+" "+shiftZ);
-            }
-            if(shiftZ>=0 && shiftZ<viewDist && (shiftX==0 || shiftZ+16<shiftX || (shiftZ+16)<-shiftX)) {
-                workList.add(new ChunkLoadingTask(shiftX,shiftZ+16));
-//Logger.getGlobal().info("add posz "+shiftX+" "+(shiftZ+16));
-            }
-            if(shiftZ<=0 && -shiftZ<viewDist && (shiftX==0 || -(shiftZ-16)<-shiftX  || -(shiftZ-16)<shiftX)) {
-                workList.add(new ChunkLoadingTask(shiftX,shiftZ-16));
-//Logger.getGlobal().info("add negz "+(shiftX)+" "+(shiftZ-16));
-            }
-            workList.remove(this);
-        }
-    }
-     
-    private void loadTargetChunks() {
-        Chunk centerChunk = target.getChunk();
-        chunkList.clear();
-        if(area.getViewDistance()>0) {
-//Logger.getGlobal().info("preload");
-            centerChunk.load();
-            chunkList.add(centerChunk);
-            workList.clear();
-            workList.add(new ChunkLoadingTask(16,0));
-            workList.add(new ChunkLoadingTask(0,16));
-            workList.add(new ChunkLoadingTask(-16,0));
-            workList.add(new ChunkLoadingTask(0,-16));
-            while(!workList.isEmpty()) {
-                workList.get(0).execute();
-            }
-        }
-player.sendMessage("-----> preloading "+chunkList.size()+" chunks.");
-//Logger.getGlobal().info("number of chunks "+chunkList.size());
-    }
-    
-    private boolean isChunkListLoaded() {
-        for(Chunk chunk:chunkList) {
-            if(!chunk.isLoaded()) {
-                return false;
-            }
-        }
-        return true;
-     }
 }

@@ -7,6 +7,7 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
+import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -43,6 +44,7 @@ public class AtpConfig extends AtpCommand{
             config(cs,area,args);
         }
         cs.sendMessage(ChatColor.YELLOW+"Config Data:");
+        cs.sendMessage("Preload distance "+ area.getPreloadDistance());
         cs.sendMessage("View distance "+ area.getViewDistance());
         cs.sendMessage("First Delay "+ area.getFirstDelay());
         cs.sendMessage("Teleport Delay "+ area.getTeleportDelay());
@@ -54,7 +56,11 @@ public class AtpConfig extends AtpCommand{
     
     private void config(CommandSender cs, TeleportationArea area, String... args) {
         switch(args[1].charAt(0)) {
+            case 'p':
+                area.setPreloadDistance(Integer.parseInt(args[2]));
+                break;
             case 'd':
+Logger.getGlobal().info("call set view Distance");
                 area.setViewDistance(Integer.parseInt(args[2]));
                 break;
             case 'f':

@@ -17,6 +17,7 @@
 package com.mcmiddleearth.autoteleport.data;
 
 import java.util.Map;
+import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -49,6 +50,13 @@ public class SphericalTeleportationArea extends TeleportationArea {
     public boolean isInside(Location loc) {
         return getCenter().getWorld().equals(loc.getWorld())
             && getCenter().distance(loc) <= radius;
+    }
+    
+    @Override
+    public boolean isNear(Location loc) {
+//Logger.getGlobal().info("spherical isNear "+getPreloadDistance());
+        return getCenter().getWorld().equals(loc.getWorld())
+            && getCenter().distance(loc) <= radius+getPreloadDistance();
     }
     
     @Override

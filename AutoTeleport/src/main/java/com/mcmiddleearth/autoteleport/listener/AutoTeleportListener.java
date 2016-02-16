@@ -23,12 +23,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  *
  * @author Eriol_Eandur
  */
-public class PlayerListener implements Listener{
+public class AutoTeleportListener implements Listener{
     
     @EventHandler
     public void playerMove(PlayerMoveEvent event) {
@@ -40,6 +43,15 @@ public class PlayerListener implements Listener{
         final Player player = event.getPlayer();
         Location playerLocation = player.getLocation();
         for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
+            if(area.getTarget()!=null) {
+//player.sendMessage("-----> isnearArea??");
+               if(area.isNear(playerLocation)) { 
+player.sendMessage("-----> nearArea "+area.isArmed());
+                    area.addNearPlayer(player);
+                } else {
+                    area.remove(player);
+                }
+            }
             if(area.getTarget()!=null && area.isInside(playerLocation)) {
 player.sendMessage("-----> inArea");
                 TeleportationHandler handler = new TeleportationHandler(player, area);
@@ -49,5 +61,31 @@ player.sendMessage("-----> inArea");
             }
         }
     }
+    
+    @EventHandler
+    public void playerLeave(PlayerQuitEvent event) {
+        for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
+            area.remove(event.getPlayer());
+// Logger.getGlobal().info("player quit");
+        }
+    }
+    
+    @EventHandler
+    public void chunkUnload(ChunkUnloadEvent event) {
+        for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
+            if(area.isNeeded(event.getChunk())) {
+                event.setCancelled(true);
+//Logger.getGlobal().info("cancelling unload");
+                return;
+            }
+        }
+    }
+    
+    @EventHandler
+    public void chunkLoad(ChunkLoadEvent event) {
+//        Logger.getGlobal().info("Load chunk: "+event.getChunk().getX()+" "+event.getChunk().getZ());
+    }
+    
+    
 }
 

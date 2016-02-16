@@ -17,6 +17,7 @@
 package com.mcmiddleearth.autoteleport.data;
 
 import java.util.Map;
+import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -58,6 +59,18 @@ public class CuboidTeleportationArea extends TeleportationArea {
             && loc.getBlockY() <= getCenter().getBlockY()+sizeY/2
             && loc.getBlockZ() >= getCenter().getBlockZ()-sizeZ/2
             && loc.getBlockZ() <= getCenter().getBlockZ()+sizeZ/2;
+    }
+    
+    @Override
+    public boolean isNear(Location loc) {
+//Logger.getGlobal().info("cuboid isNear "+getPreloadDistance());
+        return getCenter().getWorld().equals(loc.getWorld())
+            && loc.getBlockX() >= getCenter().getBlockX()-(sizeX+getPreloadDistance())/2
+            && loc.getBlockX() <= getCenter().getBlockX()+(sizeX+getPreloadDistance())/2
+            && loc.getBlockY() >= getCenter().getBlockY()-(sizeY+getPreloadDistance())/2
+            && loc.getBlockY() <= getCenter().getBlockY()+(sizeY+getPreloadDistance())/2
+            && loc.getBlockZ() >= getCenter().getBlockZ()-(sizeZ+getPreloadDistance())/2
+            && loc.getBlockZ() <= getCenter().getBlockZ()+(sizeZ+getPreloadDistance())/2;
     }
     
     @Override
