@@ -49,6 +49,7 @@ public class AtpCommandExecutor implements CommandExecutor {
         addCommandHandler("exclude", new AtpExclude(permission));
         addCommandHandler("include", new AtpInclude(permission));
         addCommandHandler("config", new AtpConfig(permission));
+        addCommandHandler("dev", new AtpDev(permission));
     }
     
     @Override

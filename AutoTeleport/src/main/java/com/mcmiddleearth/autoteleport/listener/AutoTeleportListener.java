@@ -18,6 +18,8 @@ package com.mcmiddleearth.autoteleport.listener;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
+import com.mcmiddleearth.autoteleport.util.DevUtil;
+import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,16 +46,15 @@ public class AutoTeleportListener implements Listener{
         Location playerLocation = player.getLocation();
         for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
             if(area.getTarget()!=null) {
-//player.sendMessage("-----> isnearArea??");
                if(area.isNear(playerLocation)) { 
-player.sendMessage("-----> nearArea "+area.isArmed());
+DevUtil.log("-----> nearArea "+area.isArmed());
                     area.addNearPlayer(player);
                 } else {
                     area.remove(player);
                 }
             }
             if(area.getTarget()!=null && area.isInside(playerLocation)) {
-player.sendMessage("-----> inArea");
+DevUtil.log("-----> inArea");
                 TeleportationHandler handler = new TeleportationHandler(player, area);
                 PluginData.registerTeleportation(player, handler);
                 handler.startTeleportation();
@@ -66,7 +67,7 @@ player.sendMessage("-----> inArea");
     public void playerLeave(PlayerQuitEvent event) {
         for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
             area.remove(event.getPlayer());
-// Logger.getGlobal().info("player quit");
+DevUtil.log(2,"player quit");
         }
     }
     
@@ -75,7 +76,7 @@ player.sendMessage("-----> inArea");
         for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
             if(area.isNeeded(event.getChunk())) {
                 event.setCancelled(true);
-//Logger.getGlobal().info("cancelling unload");
+DevUtil.log(2,"cancelling unload");
                 return;
             }
         }
@@ -83,7 +84,7 @@ player.sendMessage("-----> inArea");
     
     @EventHandler
     public void chunkLoad(ChunkLoadEvent event) {
-//        Logger.getGlobal().info("Load chunk: "+event.getChunk().getX()+" "+event.getChunk().getZ());
+DevUtil.log(2,"Load chunk: "+event.getChunk().getX()+" "+event.getChunk().getZ());
     }
     
     

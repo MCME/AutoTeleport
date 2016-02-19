@@ -3,6 +3,7 @@ main: com.mcmiddleearth.autoteleport.AutoTeleportPlugin
 version: 0.1
 description: automated teleportation plugin
 load: POSTWORLD
+softdepend: [ProtocolLib]
 softdepend: [Multiverse-Core]
 commands:
     atp:

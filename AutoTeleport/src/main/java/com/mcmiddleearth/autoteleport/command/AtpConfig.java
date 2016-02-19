@@ -7,6 +7,8 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
+import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -42,6 +44,12 @@ public class AtpConfig extends AtpCommand{
         }
         else {
             config(cs,area,args);
+        }
+        try {
+            PluginData.saveData();
+        } catch (IOException ex) {
+            sendIOErrorMessage(cs);
+            Logger.getLogger(AtpTarget.class.getName()).log(Level.SEVERE, null, ex);
         }
         cs.sendMessage(ChatColor.YELLOW+"Config Data:");
         cs.sendMessage("Preload distance "+ area.getPreloadDistance());

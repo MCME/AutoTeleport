@@ -16,6 +16,8 @@
  */
 package com.mcmiddleearth.autoteleport.data;
 
+import com.mcmiddleearth.autoteleport.util.DevUtil;
+import com.mcmiddleearth.autoteleport.util.ProtocolLibUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -70,7 +71,7 @@ public abstract class TeleportationArea {
     private boolean recalculateTarget = false,
             refreshChunks = false;
             
-    private final Set<Chunk> targetChunks = new HashSet<>();
+    private final List<Chunk> targetChunks = new ArrayList<>();
     
     private int targetChunkMinX, targetChunkMaxX, targetChunkMinZ, targetChunkMaxZ;
     
@@ -89,7 +90,14 @@ public abstract class TeleportationArea {
         this.target = deserializeLocation(config.getConfigurationSection("target"));
         this.dynamic = config.getBoolean("dynamic");
         this.keepOrientation = config.getBoolean("keepOrientation");
-        getTargetChunks();
+        this.preloadDistance=config.getInt("preloadDistance", preloadDistance);
+        this.viewDistance=config.getInt("viewDistance", viewDistance);
+        this.firstDelay=config.getInt("firstDelay", firstDelay);
+        this.teleportDelay=config.getInt("teleportDelay", teleportDelay);
+        this.velocityDelay=config.getInt("velocityDelay", velocityDelay);
+        this.velocityReps=config.getInt("velocityReps", velocityReps);
+        this.refreshChunks=config.getBoolean("refreshChunks", refreshChunks);
+        this.recalculateTarget=config.getBoolean("recalculateTarget", recalculateTarget);
     }
     
     public abstract boolean isNear(Location loc);
@@ -97,15 +105,16 @@ public abstract class TeleportationArea {
     public abstract boolean isInside(Location loc);
     
     public void setViewDistance(int distanceInBlocks) {
-//Logger.getGlobal().info("setViewDistance");
         this.viewDistance=distanceInBlocks;
-        getTargetChunks();
+        targetChunks.clear();
     }
     
     public void addNearPlayer(Player player) {
         nearPlayers.add(player.getUniqueId());
         if(!armed) {
+            getTargetChunks();
             loadTargetChunks();
+            refreshChunks(player);
             armed = true;
         }
     }
@@ -124,13 +133,9 @@ public abstract class TeleportationArea {
                      && chunk.getZ()<=targetChunkMaxZ;
     }
     
-/*    public boolean arePlayersNear() {
-        return !nearPlayers.isEmpty();
-    }
-*/    
     public void setTarget(Location target) {
         this.target = target;
-        getTargetChunks();
+        targetChunks.clear();
     }
     public String getType() {
         if(dynamic) {
@@ -152,6 +157,14 @@ public abstract class TeleportationArea {
         }
         result.put("dynamic", dynamic);
         result.put("keepOrientation", keepOrientation);
+        result.put("preloadDistance", preloadDistance);
+        result.put("viewDistance", viewDistance);
+        result.put("firstDelay", firstDelay);
+        result.put("teleportDelay", teleportDelay);
+        result.put("velocityDelay", velocityDelay);
+        result.put("velocityReps", velocityReps);
+        result.put("refreshChunks", refreshChunks);
+        result.put("recalculateTarget", recalculateTarget);
         return result;
     }
     
@@ -193,28 +206,21 @@ public abstract class TeleportationArea {
         }
          
         void execute() {
-            int viewDist = getViewDistance();
+            int viewDist = getViewDistance()/16; // block number -> chunk number
             Chunk chunk = getTarget().getWorld().getChunkAt(target.getChunk().getX()+shiftX, 
                                                                  target.getChunk().getZ()+shiftZ);
-            //chunk.load();
-//Logger.getGlobal().info("");
-//Logger.getGlobal().info("load " + (shiftX) +" "+(shiftZ)+ "          step "+(Math.abs(shiftX)+Math.abs(shiftZ)));
             targetChunks.add(chunk);
             if(shiftX>=0 && shiftX<viewDist && (shiftZ==0 || shiftX<shiftZ || shiftX<-shiftZ)) {
-                workList.add(new ChunkLoadingTask(shiftX+16,shiftZ));
-//Logger.getGlobal().info("add posx "+(shiftX+16)+" "+shiftZ);
+                workList.add(new ChunkLoadingTask(shiftX+1,shiftZ));
             }
             if(shiftX<=0 && -shiftX<viewDist && (shiftZ==0 || -shiftX<-shiftZ || -shiftX<shiftZ)) {
-                workList.add(new ChunkLoadingTask(shiftX-16,shiftZ));
-//Logger.getGlobal().info("add negx "+(shiftX-16)+" "+shiftZ);
+                workList.add(new ChunkLoadingTask(shiftX-1,shiftZ));
             }
-            if(shiftZ>=0 && shiftZ<viewDist && (shiftX==0 || shiftZ+16<shiftX || (shiftZ+16)<-shiftX)) {
-                workList.add(new ChunkLoadingTask(shiftX,shiftZ+16));
-//Logger.getGlobal().info("add posz "+shiftX+" "+(shiftZ+16));
+            if(shiftZ>=0 && shiftZ<viewDist && (shiftX==0 || shiftZ+1<shiftX || (shiftZ+1)<-shiftX)) {
+                workList.add(new ChunkLoadingTask(shiftX,shiftZ+1));
             }
-            if(shiftZ<=0 && -shiftZ<viewDist && (shiftX==0 || -(shiftZ-16)<-shiftX  || -(shiftZ-16)<shiftX)) {
-                workList.add(new ChunkLoadingTask(shiftX,shiftZ-16));
-//Logger.getGlobal().info("add negz "+(shiftX)+" "+(shiftZ-16));
+            if(shiftZ<=0 && -shiftZ<viewDist && (shiftX==0 || -(shiftZ-1)<-shiftX  || -(shiftZ-1)<shiftX)) {
+                workList.add(new ChunkLoadingTask(shiftX,shiftZ-1));
             }
             workList.remove(this);
         }
@@ -222,53 +228,61 @@ public abstract class TeleportationArea {
      
     private final List<ChunkLoadingTask> workList = new ArrayList<>();
     
-    private void getTargetChunks() {
+    private void _simple_getTargetChunks() {
+        if(!targetChunks.isEmpty()) {
+            return;
+        }
         if(target!=null) {
-            targetChunks.clear();
-            targetChunkMinX = target.getBlockX()-getViewDistance();
-            targetChunkMaxX = target.getBlockX()+getViewDistance();
-            targetChunkMinZ = target.getBlockZ()-getViewDistance();
-            targetChunkMaxZ = target.getBlockZ()+getViewDistance();
-            for(int i= targetChunkMinX;i<targetChunkMaxX;i+=16) {
-                for(int j= targetChunkMinZ;j<targetChunkMaxZ;j+=16) {
+            targetChunkMinX = (target.getBlockX()-getViewDistance())/16;
+            targetChunkMaxX = (target.getBlockX()+getViewDistance())/16;
+            targetChunkMinZ = (target.getBlockZ()-getViewDistance())/16;
+            targetChunkMaxZ = (target.getBlockZ()+getViewDistance())/16;
+//Logger.getGlobal().info("    "+targetChunkMinX);
+//Logger.getGlobal().info("    "+targetChunkMaxX);
+//Logger.getGlobal().info("    "+targetChunkMinZ);
+//Logger.getGlobal().info("    "+targetChunkMaxZ);
+            for(int i = targetChunkMinX; i<targetChunkMaxX; i++) {
+                for(int j = targetChunkMinZ; j<targetChunkMaxZ; j++) {
                     targetChunks.add(getTarget().getWorld().getChunkAt(i,j));
                 }
             }
-//player.sendMessage("-----> preloading "+chunkList.size()+" chunks.");
-Logger.getGlobal().info("number of chunks "+targetChunks.size());
+//DevUtil.log("-----> preloading "+chunkList.size()+" chunks.");
+//Logger.getGlobal().info("number of chunks "+targetChunks.size());
         }
     }
     
-    private void _invalid_getTargetChunks() {
+    private void getTargetChunks() {
+        if(!targetChunks.isEmpty()) {
+            return;
+        }
         if(target!=null) {
             Chunk centerChunk = target.getChunk();
-            targetChunks.clear();
             if(getViewDistance()>0) {
-//Logger.getGlobal().info("preload");
-                //centerChunk.load();
+DevUtil.log("preload");
                 targetChunks.add(centerChunk);
                 workList.clear();
-                workList.add(new ChunkLoadingTask(16,0));
-                workList.add(new ChunkLoadingTask(0,16));
-                workList.add(new ChunkLoadingTask(-16,0));
-                workList.add(new ChunkLoadingTask(0,-16));
+                workList.add(new ChunkLoadingTask(1,0));
+                workList.add(new ChunkLoadingTask(0,1));
+                workList.add(new ChunkLoadingTask(-1,0));
+                workList.add(new ChunkLoadingTask(0,-1));
                 while(!workList.isEmpty()) {
                     workList.get(0).execute();
                 }
             }
-//player.sendMessage("-----> preloading "+chunkList.size()+" chunks.");
-Logger.getGlobal().info("number of chunks "+targetChunks.size());
+DevUtil.log("-----> getting "+targetChunks.size()+" chunks.");
         }
         else {
-Logger.getGlobal().info("No chunks got as no target set.");
+DevUtil.log("No chunks got as no target set.");
         }
     }
     
     public void loadTargetChunks() {
         for(Chunk chunk: targetChunks) {
-            chunk.load();
+            if(!chunk.isLoaded()) {
+                chunk.load();
+            }
         }
-//Logger.getGlobal().info("loading "+targetChunks.size()+" chunks.");
+DevUtil.log("loading "+targetChunks.size()+" chunks.");
     }
     
     public boolean isChunkListLoaded() {
@@ -280,9 +294,20 @@ Logger.getGlobal().info("No chunks got as no target set.");
         return true;
      }
 
-    public void refreshChunks() {
-        for(Chunk chunk: targetChunks) {
+    public void refreshChunks(Player player) {
+        /*for(Chunk chunk: targetChunks) { *********No packages sent to client*********
             target.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
+        }*/
+        if(!ProtocolLibUtil.isInitiated()) {
+            DevUtil.log("Protokol not init");
+            return;
+        }
+        for(int i = 0; i < targetChunks.size();i+=16) {
+            List<Chunk> sublist = new ArrayList<>();
+            for(int j = i; j < i+16 && j < targetChunks.size();j++) {
+                sublist.add(targetChunks.get(j));
+            }
+            ProtocolLibUtil.sendChunks(player, sublist);
         }
     }
 

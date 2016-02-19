@@ -19,6 +19,7 @@ package com.mcmiddleearth.autoteleport;
 import com.mcmiddleearth.autoteleport.command.AtpCommandExecutor;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.listener.AutoTeleportListener;
+import com.mcmiddleearth.autoteleport.util.ProtocolLibUtil;
 import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,6 +36,8 @@ public class AutoTeleportPlugin extends JavaPlugin{
     @Override
     public void onEnable() {
         pluginInstance = this;
+Logger.getGlobal().info("1 enable ");
+        ProtocolLibUtil.init();
         PluginData.loadData();
         getServer().getPluginManager().registerEvents(new AutoTeleportListener(), this);
         getCommand("atp").setExecutor(new AtpCommandExecutor());

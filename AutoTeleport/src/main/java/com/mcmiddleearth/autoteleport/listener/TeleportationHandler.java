@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Lars
+ * Copyright (C) 2016 MCME
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package com.mcmiddleearth.autoteleport.listener;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
+import com.mcmiddleearth.autoteleport.util.DevUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,13 +53,11 @@ public class TeleportationHandler {
             public void run() {
                 if(area.isChunkListLoaded()) {
                     if(waitTics==0 && area.isRefreshChunks()) {
-player.sendMessage("-----> sending chunk refresh packages");
-//Logger.getGlobal().info("refresh");
-                            area.refreshChunks();
+DevUtil.log("-----> sending chunk refresh packages");
+                            area.refreshChunks(player);
                     }
                     if(waitTics<area.getTeleportDelay()) {
-player.sendMessage("-----> waiting....");
-//Logger.getGlobal().info("wait");
+DevUtil.log("-----> waiting....");
                         waitTics++;
                         return;
                     }
@@ -67,16 +66,14 @@ player.sendMessage("-----> waiting....");
                         loc = calculateTarget();
                     }
                     player.teleport(loc);  
-player.sendMessage("-----> teleport!");
-//Logger.getGlobal().info("teleport");
+DevUtil.log("-----> teleport! "+player.getName()+" "+loc.getBlockX()+" "+loc.getBlockZ());
                     if(area.isDynamic()) {
                         new BukkitRunnable() {
                             int reps=0;
                             @Override
                             public void run() {
                                 if(reps<area.getVelocityReps()) {
-player.sendMessage("-----> set velocity");
-//Logger.getGlobal().info("set velocity");
+DevUtil.log("-----> set velocity");
                                     player.setVelocity(vel);
                                     reps++;
                                 }
@@ -91,8 +88,7 @@ player.sendMessage("-----> set velocity");
                     this.cancel();
                 }
                 else {
-player.sendMessage("-----> waiting for chunk preloading ");
-//Logger.getGlobal().info("not loaded");
+DevUtil.log("-----> waiting for chunk preloading ");
                 }
             }
         }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getFirstDelay(),1);
