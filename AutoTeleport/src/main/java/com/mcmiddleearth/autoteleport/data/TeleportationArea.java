@@ -61,7 +61,8 @@ public abstract class TeleportationArea {
                 teleportDelay = 0,
                 velocityDelay = 2,
                 velocityReps = 1,
-                preloadDistance = 20;
+                preloadDistance = 20,
+                bulkSize = 8;
     
     @Getter
     private int viewDistance = 80; // #Blocks  (160 blocks == 10 chunks)
@@ -302,9 +303,9 @@ DevUtil.log("loading "+targetChunks.size()+" chunks.");
             DevUtil.log("Protokol not init");
             return;
         }
-        for(int i = 0; i < targetChunks.size();i+=16) {
+        for(int i = 0; i < targetChunks.size();i+=bulkSize) {
             List<Chunk> sublist = new ArrayList<>();
-            for(int j = i; j < i+16 && j < targetChunks.size();j++) {
+            for(int j = i; j < i+bulkSize && j < targetChunks.size();j++) {
                 sublist.add(targetChunks.get(j));
             }
             ProtocolLibUtil.sendChunks(player, sublist);

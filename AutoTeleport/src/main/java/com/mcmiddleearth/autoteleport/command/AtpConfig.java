@@ -58,6 +58,7 @@ public class AtpConfig extends AtpCommand{
         cs.sendMessage("Teleport Delay "+ area.getTeleportDelay());
         cs.sendMessage("Velocity Delay "+area.getVelocityDelay());
         cs.sendMessage("Velocity Reps "+ area.getVelocityReps());
+        cs.sendMessage("Bulk Size "+ area.getBulkSize());
         cs.sendMessage("Recalc Target "+ area.isRecalculateTarget());
         cs.sendMessage("Refresh Chunks "+ area.isRefreshChunks());
     }
@@ -88,6 +89,9 @@ Logger.getGlobal().info("call set view Distance");
                 break;
             case 'e':
                 area.setRefreshChunks(Boolean.parseBoolean(args[2]));
+                break;
+            case 'b':
+                area.setBulkSize(Integer.parseInt(args[2]));
                 break;
             default:
                 cs.sendMessage("Property not found.");

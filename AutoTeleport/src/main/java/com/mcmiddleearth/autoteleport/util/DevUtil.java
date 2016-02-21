@@ -18,10 +18,13 @@ package com.mcmiddleearth.autoteleport.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -30,8 +33,7 @@ import org.bukkit.entity.Player;
  */
 public class DevUtil {
     
-    @Getter
-    private static List<Player> developer = new ArrayList<>();
+    private static List<UUID> developer = new ArrayList<>();
     
     private static final String PREFIX = ""+ChatColor.BOLD+ChatColor.GOLD;
     private static final String PLUGIN = "[ATP] ";
@@ -51,8 +53,12 @@ public class DevUtil {
         if(level<msglevel) {
             return;
         }
-        for(Player player:developer) {
-            player.sendMessage(PREFIX+PLUGIN+message);
+        
+        for(UUID uuid:developer) {
+            Player player = Bukkit.getPlayer(uuid);
+            if(player!=null) {
+                player.sendMessage(PREFIX+PLUGIN+message);
+            }
         }
         if(consoleOutput) {
             Logger.getGlobal().info(PLUGIN+message);
@@ -60,21 +66,24 @@ public class DevUtil {
     }
     
     public static void add(Player player) {
-        for(Player search: developer) {
-            if(search.getUniqueId().equals(player.getUniqueId())) {
+        for(UUID search: developer) {
+            if(search.equals(player.getUniqueId())) {
                 return;
             }
         }
-        developer.add(player);
+        developer.add(player.getUniqueId());
     }
     
     public static void remove(Player player) {
-        for(Player search: developer) {
-            if(search.getUniqueId().equals(player.getUniqueId())) {
-                developer.remove(search);
-            }
-        }
+        developer.remove(player.getUniqueId());
     }
     
+    public static List<OfflinePlayer> getDeveloper() {
+        List<OfflinePlayer> devs = new ArrayList<>();
+        for(UUID search: developer) {
+            devs.add(Bukkit.getOfflinePlayer(search));
+        }
+        return devs;
+    }
 
 }

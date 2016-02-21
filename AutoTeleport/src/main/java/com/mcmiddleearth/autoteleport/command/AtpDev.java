@@ -6,6 +6,7 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.util.DevUtil;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -57,7 +58,7 @@ public class AtpDev extends AtpCommand{
     private void showDetails(CommandSender cs) {
         cs.sendMessage("DevUtil: Level - "+DevUtil.getLevel()+"; Console - "+DevUtil.isConsoleOutput()+"; ");
         cs.sendMessage("         Developer:");
-        for(Player player:DevUtil.getDeveloper()) {
+        for(OfflinePlayer player:DevUtil.getDeveloper()) {
         cs.sendMessage("                "+player.getName());
         }
     }

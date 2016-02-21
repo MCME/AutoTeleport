@@ -16,6 +16,7 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
+import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.util.MessageUtil;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -24,6 +25,7 @@ import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 /**
  *
@@ -70,7 +72,9 @@ public class AtpCommandExecutor implements CommandExecutor {
     }
     
     private void sendNoSubcommandErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "You're missing subcommand name for this command.");
+        //MessageUtil.sendErrorMessage(cs, "You're missing subcommand name for this command.");
+        PluginDescriptionFile descr = AutoTeleportPlugin.getPluginInstance().getDescription();
+        MessageUtil.sendErrorMessage(cs, descr.getName()+" - version "+descr.getVersion());
     }
     
     private void sendSubcommandNotFoundErrorMessage(CommandSender cs) {
