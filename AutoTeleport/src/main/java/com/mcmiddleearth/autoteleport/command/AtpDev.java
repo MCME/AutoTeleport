@@ -18,8 +18,8 @@ public class AtpDev extends AtpCommand{
     
     public AtpDev(String... permissionNodes) {
         super(0, false, permissionNodes);
-        setShortDescription(": ");
-        setUsageDescription(": ");
+        setShortDescription(": Displays informations for developers.");
+        setUsageDescription("[r | #]: without argument player starts to recieve developer messages from AutoTeleport plugin. With argument 'r'] receiving developer messages is stopped. A numeric arguments sets the maximum debug level of messages to be shown.");
     }
     
     @Override

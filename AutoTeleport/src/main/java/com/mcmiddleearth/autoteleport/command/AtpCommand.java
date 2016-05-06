@@ -5,7 +5,7 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.mcmiddleearth.autoteleport.util.MessageUtil;
+import com.mcmiddleearth.pluginutils.message.MessageUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;

@@ -17,7 +17,6 @@
 package com.mcmiddleearth.autoteleport.data;
 
 import com.mcmiddleearth.autoteleport.util.DevUtil;
-import com.mcmiddleearth.autoteleport.util.ProtocolLibUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -115,7 +114,6 @@ public abstract class TeleportationArea {
         if(!armed) {
             getTargetChunks();
             loadTargetChunks();
-            refreshChunks(player);
             armed = true;
         }
     }
@@ -238,17 +236,11 @@ public abstract class TeleportationArea {
             targetChunkMaxX = (target.getBlockX()+getViewDistance())/16;
             targetChunkMinZ = (target.getBlockZ()-getViewDistance())/16;
             targetChunkMaxZ = (target.getBlockZ()+getViewDistance())/16;
-//Logger.getGlobal().info("    "+targetChunkMinX);
-//Logger.getGlobal().info("    "+targetChunkMaxX);
-//Logger.getGlobal().info("    "+targetChunkMinZ);
-//Logger.getGlobal().info("    "+targetChunkMaxZ);
             for(int i = targetChunkMinX; i<targetChunkMaxX; i++) {
                 for(int j = targetChunkMinZ; j<targetChunkMaxZ; j++) {
                     targetChunks.add(getTarget().getWorld().getChunkAt(i,j));
                 }
             }
-//DevUtil.log("-----> preloading "+chunkList.size()+" chunks.");
-//Logger.getGlobal().info("number of chunks "+targetChunks.size());
         }
     }
     
@@ -294,22 +286,5 @@ DevUtil.log("loading "+targetChunks.size()+" chunks.");
         }
         return true;
      }
-
-    public void refreshChunks(Player player) {
-        /*for(Chunk chunk: targetChunks) { *********No packages sent to client*********
-            target.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
-        }*/
-        if(!ProtocolLibUtil.isInitiated()) {
-            DevUtil.log("Protokol not init");
-            return;
-        }
-        for(int i = 0; i < targetChunks.size();i+=bulkSize) {
-            List<Chunk> sublist = new ArrayList<>();
-            for(int j = i; j < i+bulkSize && j < targetChunks.size();j++) {
-                sublist.add(targetChunks.get(j));
-            }
-            ProtocolLibUtil.sendChunks(player, sublist);
-        }
-    }
 
 }

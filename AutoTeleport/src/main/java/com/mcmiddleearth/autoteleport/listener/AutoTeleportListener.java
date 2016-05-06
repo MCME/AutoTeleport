@@ -19,7 +19,6 @@ package com.mcmiddleearth.autoteleport.listener;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
 import com.mcmiddleearth.autoteleport.util.DevUtil;
-import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

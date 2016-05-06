@@ -7,7 +7,9 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.autoteleport.util.MessageUtil;
+import com.mcmiddleearth.pluginutils.message.FancyMessage;
+import com.mcmiddleearth.pluginutils.message.MessageType;
+import com.mcmiddleearth.pluginutils.message.MessageUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -34,17 +36,19 @@ public class AtpList extends AtpCommand{
             if(args.length==0 || areaName.startsWith(args[0])) {
                 TeleportationArea area = PluginData.getTeleportationArea(areaName);
                 Location target = area.getTarget();
-                Map<String,String> message = new LinkedHashMap<>();
-                message.put(ChatColor.AQUA+MessageUtil.getNOPREFIX()+"- ",null);
-                message.put(ChatColor.BLUE+areaName,"/atp warp "+areaName);
-                message.put(ChatColor.AQUA+": "+area.getType()+" -> ",null);
+                FancyMessage fancyMessage = new FancyMessage(MessageType.INFO_INDENTED);
+                fancyMessage.addSimple("- ")
+                            .addFancy(MessageUtil.STRESSED+areaName,"/atp warp "+areaName,"Click to warp there.")
+                            .addSimple(MessageUtil.INFO+": "+area.getType()+" -> ");
                 if(target!=null) {
-                    message.put(ChatColor.BLUE+target.getWorld().getName()+"  ","/atp warp "+areaName+" target");
+                    fancyMessage.addFancy(MessageUtil.STRESSED+target.getWorld().getName()+"  ",
+                                          "/atp warp "+areaName+" target",
+                                          "Click to warp there.");
                 }
                 else {
-                    message.put(ChatColor.AQUA+"NO TARGET",null);
+                    fancyMessage.addSimple(MessageUtil.INFO+"NO TARGET");
                 }
-                MessageUtil.sendClickableMessage((Player)cs, message);
+                fancyMessage.send((Player)cs);
             }
         }
         

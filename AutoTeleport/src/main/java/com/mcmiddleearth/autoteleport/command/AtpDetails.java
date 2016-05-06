@@ -9,7 +9,9 @@ import com.mcmiddleearth.autoteleport.data.CuboidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.autoteleport.util.MessageUtil;
+import com.mcmiddleearth.pluginutils.message.FancyMessage;
+import com.mcmiddleearth.pluginutils.message.MessageType;
+import com.mcmiddleearth.pluginutils.message.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -35,13 +37,15 @@ public class AtpDetails extends AtpCommand{
         }
         else {
             MessageUtil.sendInfoMessage(cs, "Details for teleportation area "+args[0]+".");
-            MessageUtil.sendClickableMessage((Player)cs, MessageUtil.getNOPREFIX()+ChatColor.GOLD
-                                                   +"Center"+ChatColor.YELLOW
+            new FancyMessage(MessageType.HIGHLIGHT_INDENTED)
+                        .addFancy("Center"+MessageUtil.HIGHLIGHT_STRESSED
                                                    +": "+ area.getCenter().getWorld().getName()
                                                    +" "+area.getCenter().getBlockX()
                                                    +" "+area.getCenter().getBlockY()
                                                    +" "+area.getCenter().getBlockZ(),
-                                              "/atp warp "+args[0]);
+                                              "/atp warp "+args[0],
+                                              "Click to warp to area. Make sure it is not active ;).")
+                        .send((Player) cs);
             if(area instanceof CuboidTeleportationArea) {
                 CuboidTeleportationArea cuboid = (CuboidTeleportationArea)area;
                 MessageUtil.sendNoPrefixInfoMessage(cs, ChatColor.YELLOW+"Cuboid area with"
@@ -56,13 +60,15 @@ public class AtpDetails extends AtpCommand{
             }
             Location target = area.getTarget();
             if(target!=null) {
-                MessageUtil.sendClickableMessage((Player)cs, MessageUtil.getNOPREFIX()+ChatColor.GOLD
-                                                       +"Target"+ ChatColor.YELLOW
+                new FancyMessage(MessageType.HIGHLIGHT_INDENTED)
+                        .addFancy("Target"+ MessageUtil.HIGHLIGHT_STRESSED
                                                        +": "+ area.getTarget().getWorld().getName()
                                                        +" x: "+area.getTarget().getBlockX()
                                                        +" y: "+area.getTarget().getBlockY()
                                                        +" z: "+area.getTarget().getBlockZ(),
-                                                 "/atp warp "+args[0]+" target");
+                                                 "/atp warp "+args[0]+" target",
+                                                 "Click here to warp to target area.")
+                        .send((Player)cs);
             }
             else {
                 MessageUtil.sendNoPrefixInfoMessage(cs,  ChatColor.YELLOW+ "Target: NO TARGET"); 

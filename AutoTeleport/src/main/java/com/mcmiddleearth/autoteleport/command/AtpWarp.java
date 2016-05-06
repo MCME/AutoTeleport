@@ -5,13 +5,9 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.mcmiddleearth.autoteleport.data.CuboidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.PluginData;
-import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.autoteleport.util.MessageUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import com.mcmiddleearth.pluginutils.message.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

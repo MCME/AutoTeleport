@@ -17,7 +17,7 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
-import com.mcmiddleearth.autoteleport.util.MessageUtil;
+import com.mcmiddleearth.pluginutils.message.MessageUtil;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,20 +38,20 @@ public class AtpCommandExecutor implements CommandExecutor {
     
     private final String permission = "autoteleport.user";
     public AtpCommandExecutor() {
+        addCommandHandler("config", new AtpConfig(permission));
         addCommandHandler("delete", new AtpDelete(permission));
         addCommandHandler("details", new AtpDetails(permission));
+        addCommandHandler("dev", new AtpDev(permission));
+        addCommandHandler("exclude", new AtpExclude(permission));
         addCommandHandler("help", new AtpHelp(permission));
+        addCommandHandler("include", new AtpInclude(permission));
         addCommandHandler("list", new AtpList(permission));
+        addCommandHandler("off", new AtpOff(permission));
+        addCommandHandler("on", new AtpOn(permission));
         addCommandHandler("set", new AtpSet(permission));
         addCommandHandler("size", new AtpSize(permission));
         addCommandHandler("target", new AtpTarget(permission));
         addCommandHandler("warp", new AtpWarp(permission));
-        addCommandHandler("on", new AtpOn(permission));
-        addCommandHandler("off", new AtpOff(permission));
-        addCommandHandler("exclude", new AtpExclude(permission));
-        addCommandHandler("include", new AtpInclude(permission));
-        addCommandHandler("config", new AtpConfig(permission));
-        addCommandHandler("dev", new AtpDev(permission));
     }
     
     @Override

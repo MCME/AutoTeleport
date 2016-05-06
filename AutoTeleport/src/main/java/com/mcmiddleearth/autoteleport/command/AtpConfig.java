@@ -21,8 +21,8 @@ public class AtpConfig extends AtpCommand{
     
     public AtpConfig(String... permissionNodes) {
         super(3, false, permissionNodes);
-        setShortDescription(": ");
-        setUsageDescription(": ");
+        setShortDescription(": configures teleportation details");
+        setUsageDescription(": DONT'T USE");
     }
     
     @Override
@@ -45,6 +45,10 @@ public class AtpConfig extends AtpCommand{
         else {
             config(cs,area,args);
         }
+        if(area==null) {
+            sendNoAreaErrorMessage(cs);
+            return;
+        }
         try {
             PluginData.saveData();
         } catch (IOException ex) {
@@ -52,15 +56,13 @@ public class AtpConfig extends AtpCommand{
             Logger.getLogger(AtpTarget.class.getName()).log(Level.SEVERE, null, ex);
         }
         cs.sendMessage(ChatColor.YELLOW+"Config Data:");
-        cs.sendMessage("Preload distance "+ area.getPreloadDistance());
-        cs.sendMessage("View distance "+ area.getViewDistance());
-        cs.sendMessage("First Delay "+ area.getFirstDelay());
-        cs.sendMessage("Teleport Delay "+ area.getTeleportDelay());
-        cs.sendMessage("Velocity Delay "+area.getVelocityDelay());
-        cs.sendMessage("Velocity Reps "+ area.getVelocityReps());
-        cs.sendMessage("Bulk Size "+ area.getBulkSize());
-        cs.sendMessage("Recalc Target "+ area.isRecalculateTarget());
-        cs.sendMessage("Refresh Chunks "+ area.isRefreshChunks());
+        cs.sendMessage(ChatColor.BLUE+"P"+ChatColor.AQUA+"reload distance "+ area.getPreloadDistance());
+        cs.sendMessage("View "+ChatColor.BLUE+"D"+ChatColor.AQUA+"istance "+ area.getViewDistance());
+        cs.sendMessage(ChatColor.BLUE+"F"+ChatColor.AQUA+"irst Delay "+ area.getFirstDelay());
+        cs.sendMessage(ChatColor.BLUE+"T"+ChatColor.AQUA+"eleport Delay "+ area.getTeleportDelay());
+        cs.sendMessage(ChatColor.BLUE+"V"+ChatColor.AQUA+"elocity Delay "+area.getVelocityDelay());
+        cs.sendMessage("Velocity "+ChatColor.BLUE+"R"+ChatColor.AQUA+"eps "+ area.getVelocityReps());
+        cs.sendMessage(ChatColor.BLUE+"R"+ChatColor.AQUA+"ecalc Target "+ area.isRecalculateTarget());
     }
     
     private void config(CommandSender cs, TeleportationArea area, String... args) {
@@ -87,27 +89,9 @@ Logger.getGlobal().info("call set view Distance");
             case 'c':
                 area.setRecalculateTarget(Boolean.parseBoolean(args[2]));
                 break;
-            case 'e':
-                area.setRefreshChunks(Boolean.parseBoolean(args[2]));
-                break;
-            case 'b':
-                area.setBulkSize(Integer.parseInt(args[2]));
-                break;
             default:
                 cs.sendMessage("Property not found.");
         }
     }
     
 }
-/*    @Getter
-    @Setter
-    int viewDistance = 160, // Blöcke == 10 chunks
-        firstDelay = 1,
-        teleportDelay = 0,
-        velocityDelay = 2,
-        velocityReps = 1;
-    
-    @Getter
-    @Setter
-    boolean recalculateTarget = false,
-            refreshChunks = false;*/

@@ -5,11 +5,19 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.mcmiddleearth.autoteleport.util.MessageUtil;
+import com.mcmiddleearth.pluginutils.NumericUtil;
+import com.mcmiddleearth.pluginutils.message.FancyMessage;
+import com.mcmiddleearth.pluginutils.message.MessageType;
+import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -25,10 +33,46 @@ public class AtpHelp extends AtpCommand{
     
     @Override
     protected void execute(CommandSender cs, String... args) {
-        sendHelpStartMessage(cs);
         Map <String, AtpCommand> commands = ((AtpCommandExecutor)Bukkit.getPluginCommand("atp").getExecutor())
                                                            .getCommands();
-        if(args.length>0){
+        if(args.length<1 || NumericUtil.isInt(args[0])){
+            int page = 1;
+            if(args.length>0 && NumericUtil.isInt(args[0])) {
+                page = NumericUtil.getInt(args[0]);
+            }
+            FancyMessage header = new FancyMessage(MessageType.INFO)
+                                            .addSimple("Help for "
+                                                        +MessageUtil.STRESSED+"AutoTeleport"
+                                                        +MessageUtil.INFO+" commands.");
+            Set<String> keys = commands.keySet();
+            List<FancyMessage> list = new ArrayList<>();
+            for(String key : keys) {
+                String shortDescription = commands.get(key).getShortDescription();
+                String usageDescription = commands.get(key).getUsageDescription();
+                if(shortDescription!=null){
+                }
+                else {
+                    shortDescription = ": Sorry, there is no help about this command.";
+                }
+                if(usageDescription==null){
+                    usageDescription = ": Sorry, no help here.";
+                }
+                int separator = shortDescription.indexOf(":");
+                if(separator < 0) {
+                    separator = shortDescription.length();
+                }
+                FancyMessage message = new FancyMessage(MessageType.WHITE)
+                        .addFancy(ChatColor.DARK_AQUA+"/game "+key+ChatColor.WHITE
+                                    +shortDescription.substring(0,separator), 
+                                      "/atp "+key, hoverFormat("/atp "+key+usageDescription));
+                if(separator<shortDescription.length()) {
+                    message.addSimple(shortDescription.substring(separator));
+                }
+                list.add(message);
+            }
+            MessageUtil.sendFancyListMessage((Player) cs, header, list, "/atp help ", page);
+        }
+        else {
             AtpCommand command = commands.get(args[0]);
             if(command==null) {
                 sendNoSuchCommandMessage(cs, args[0]);
@@ -39,38 +83,75 @@ public class AtpHelp extends AtpCommand{
                     description = command.getShortDescription();
                 }
                 if(description!=null){
-                    sendDescriptionMessage(cs, args[0], description);
+                    sendHelpStartMessage(cs);
+                    int separator = description.indexOf(":");
+                    new FancyMessage(MessageType.WHITE)
+                                .addClickable(ChatColor.DARK_AQUA+"/atp "+args[0]
+                                                        +(separator>0?description.substring(0, separator):"")
+                                                        +ChatColor.WHITE+description.substring(separator), 
+                                                     "/atp "+args[0])
+                                .send((Player)cs);
                 }
                 else {
                     sendNoDescriptionMessage(cs, args[0]);
                 }
             }
         }
-        else {
-            Set<String> keys = commands.keySet();
-            for(String key : keys) {
-                String description = commands.get(key).getShortDescription();
-                if(description!=null){
-                    sendDescriptionMessage(cs, key, description);
-                }
-                else {
-                    sendNoDescriptionMessage(cs, key);
-                }
-            }
-        }
         sendManualMessage(cs);
     }
 
+    private String hoverFormat(String hoverMessage) {
+        class MyScanner {
+            private final Scanner scanner;
+            public String currentToken=null;
+            public MyScanner(String string) {
+                scanner = new Scanner(string);
+                scanner.useDelimiter(" ");
+                if(scanner.hasNext()) {
+                    currentToken = scanner.next();
+                }
+            }
+            public String next() {
+                if(scanner.hasNext()) {
+                    currentToken = scanner.next();
+                } else {
+                    currentToken = null;
+                }
+                return currentToken;
+            }
+            public boolean hasCurrent() {
+                return currentToken != null;
+            }
+            public boolean hasNext() {
+                return scanner.hasNext();
+            }
+        }
+        int LENGTH_OF_LINE = 40;
+        String result = ChatColor.GOLD+"";
+        int separator = hoverMessage.indexOf(":");
+        result = result.concat(hoverMessage.substring(0,separator+1)+"\n");
+        MyScanner scanner = new MyScanner(hoverMessage.substring(separator+1));
+        while (scanner.hasCurrent()) {
+            String line = ChatColor.YELLOW+scanner.currentToken+" ";
+            scanner.next();
+            while(scanner.hasCurrent() && line.length()+scanner.currentToken.length()<LENGTH_OF_LINE) {
+                line = line.concat(scanner.currentToken+" ");
+                scanner.next();
+            }
+            if(scanner.hasCurrent()) {
+                line = line.concat("\n");
+            }
+            result = result.concat(line);
+        }
+        return result;
+    }
+    
     private void sendHelpStartMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Help for AutoTeleport plugin.");
+        MessageUtil.sendInfoMessage(cs, "Help for "+MessageUtil.STRESSED+"AutoTeleport "+MessageUtil.INFO+"plugin.");
     }
 
     private void sendNoSuchCommandMessage(CommandSender cs, String arg) {
         MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no such command.");    
-    }
-
-    private void sendDescriptionMessage(CommandSender cs, String arg, String description) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+description);
     }
 
     private void sendNoDescriptionMessage(CommandSender cs, String arg) {

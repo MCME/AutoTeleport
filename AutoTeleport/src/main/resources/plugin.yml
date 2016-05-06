@@ -1,6 +1,6 @@
 name: AutoTeleport
 main: com.mcmiddleearth.autoteleport.AutoTeleportPlugin
-version: 0.2.1
+version: 1.0.0
 description: automated teleportation plugin
 load: POSTWORLD
 softdepend: [ProtocolLib]

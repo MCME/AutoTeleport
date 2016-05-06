@@ -138,7 +138,7 @@ public class PluginData {
                 }
             }
         } catch (IOException | InvalidConfigurationException ex) {
-            Logger.getLogger(PluginData.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(PluginData.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -52,10 +52,6 @@ public class TeleportationHandler {
             @Override
             public void run() {
                 if(area.isChunkListLoaded()) {
-                    if(waitTics==0 && area.isRefreshChunks()) {
-DevUtil.log("-----> sending chunk refresh packages");
-                            area.refreshChunks(player);
-                    }
                     if(waitTics<area.getTeleportDelay()) {
 DevUtil.log("-----> waiting....");
                         waitTics++;
