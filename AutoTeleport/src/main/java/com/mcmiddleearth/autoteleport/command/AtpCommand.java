@@ -5,7 +5,7 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.autoteleport.data.PluginData;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;
@@ -62,15 +62,15 @@ public abstract class AtpCommand {
     protected abstract void execute(CommandSender cs, String... args);
     
     private void sendPlayerOnlyErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "You have to be logged in to run this command.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "You have to be logged in to run this command.");
     }
     
     private void sendNoPermsErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "You don't have permission to run this command.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "You don't have permission to run this command.");
     }
     
     protected void sendMissingArgumentErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "You're missing arguments for this command.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "You're missing arguments for this command.");
     }
     
     protected boolean hasPermissions(Player p) {
@@ -85,18 +85,18 @@ public abstract class AtpCommand {
     }
     
     protected void sendNoAreaErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "No teleportation area with that name.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "No teleportation area with that name.");
     }
 
     protected void sendDynamicToStaticMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, ChatColor.GOLD+"Center and target location will be in different worlds. Teleportation type will be static.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, ChatColor.GOLD+"Center and target location will be in different worlds. Teleportation type will be static.");
     }
     
     protected void sentInvalidArgumentMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "Invalid Argument");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "Invalid Argument");
     }
 
     protected void sendIOErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "There was an error. Teleportation data were NOT saved.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "There was an error. Teleportation data were NOT saved.");
     }
 }

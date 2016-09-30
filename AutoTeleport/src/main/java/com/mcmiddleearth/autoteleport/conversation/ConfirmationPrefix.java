@@ -16,7 +16,7 @@
  */
 package com.mcmiddleearth.autoteleport.conversation;
 
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.autoteleport.data.PluginData;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationPrefix;
@@ -29,7 +29,7 @@ class ConfirmationPrefix implements ConversationPrefix {
 
     @Override
     public String getPrefix(ConversationContext cc) {
-        return ChatColor.GOLD+MessageUtil.getPREFIX();
+        return ChatColor.GOLD+PluginData.getMessageUtil().getPREFIX();
     }
     
 }

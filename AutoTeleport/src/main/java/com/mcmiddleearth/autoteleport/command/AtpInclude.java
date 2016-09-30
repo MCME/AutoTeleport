@@ -6,7 +6,7 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,15 +59,15 @@ public class AtpInclude extends AtpCommand{
             sendIOErrorMessage(cs);
             Logger.getLogger(AtpInclude.class.getName()).log(Level.SEVERE, null, ex);
         }
-        MessageUtil.sendInfoMessage(cs, player.getName()+" is now included to automated teleport.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, player.getName()+" is now included to automated teleport.");
     }
 
     private void sendPlayerNotFoundMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "Player not found.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "Player not found.");
     }
 
     private void sendAllIncludedMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "All players are included to automated teleport now.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "All players are included to automated teleport now.");
     }
 
 }

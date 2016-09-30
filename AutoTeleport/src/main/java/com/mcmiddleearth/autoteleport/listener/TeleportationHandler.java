@@ -22,6 +22,7 @@ import com.mcmiddleearth.autoteleport.data.TeleportationArea;
 import com.mcmiddleearth.autoteleport.util.DevUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -61,7 +62,7 @@ DevUtil.log("-----> waiting....");
                     if(area.isRecalculateTarget()) {
                         loc = calculateTarget();
                     }
-                    player.teleport(loc);  
+                    player.teleport(loc, TeleportCause.END_PORTAL);  
 DevUtil.log("-----> teleport! "+player.getName()+" "+loc.getBlockX()+" "+loc.getBlockZ());
                     if(area.isDynamic()) {
                         new BukkitRunnable() {

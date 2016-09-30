@@ -7,7 +7,7 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -47,11 +47,11 @@ public class AtpWarp extends AtpCommand{
     }
 
     private void sendWelcomeToTarget(CommandSender cs, String arg) {
-        MessageUtil.sendInfoMessage(cs, "You are now at target of teleport area "+arg+".");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "You are now at target of teleport area "+arg+".");
     }
 
     private void sendWelcomeToCenter(CommandSender cs, String arg) {
-        MessageUtil.sendInfoMessage(cs, "You are now at center of teleport area "+arg+".");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "You are now at center of teleport area "+arg+".");
     }
     
 }

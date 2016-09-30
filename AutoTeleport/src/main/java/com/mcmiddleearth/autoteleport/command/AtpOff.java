@@ -6,7 +6,7 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -24,7 +24,7 @@ public class AtpOff extends AtpCommand{
     @Override
     protected void execute(CommandSender cs, String... args) {
         PluginData.setStopped(true);
-        MessageUtil.sendInfoMessage(cs, "Automated teleport deactivated.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Automated teleport deactivated.");
     }
     
 }

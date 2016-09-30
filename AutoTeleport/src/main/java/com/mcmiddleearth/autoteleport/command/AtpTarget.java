@@ -7,7 +7,7 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,7 +72,7 @@ public class AtpTarget extends AtpCommand{
     }
 
     private void sendTargetSetMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Teleport target set.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Teleport target set.");
     }
     
 }

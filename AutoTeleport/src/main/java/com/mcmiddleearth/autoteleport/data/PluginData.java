@@ -18,6 +18,7 @@ package com.mcmiddleearth.autoteleport.data;
 
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.listener.TeleportationHandler;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -42,6 +41,8 @@ import org.bukkit.entity.Player;
  */
 public class PluginData {
     
+    @Getter
+    private static final MessageUtil messageUtil = new MessageUtil();
     
     @Getter
     private final static Map<String, TeleportationArea> teleportAreas = new HashMap<>();

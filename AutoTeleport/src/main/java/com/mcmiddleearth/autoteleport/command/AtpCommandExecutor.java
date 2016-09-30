@@ -17,10 +17,12 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.autoteleport.data.PluginData;
+import com.mcmiddleearth.autoteleport.util.DevUtil;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -57,7 +59,8 @@ public class AtpCommandExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] strings) {
         if(!string.equalsIgnoreCase("atp")) {
-            return false;
+            //return false;
+            DevUtil.log("atp would have returned false");            
         }
         if(strings == null || strings.length == 0) {
             sendNoSubcommandErrorMessage(cs);
@@ -72,13 +75,13 @@ public class AtpCommandExecutor implements CommandExecutor {
     }
     
     private void sendNoSubcommandErrorMessage(CommandSender cs) {
-        //MessageUtil.sendErrorMessage(cs, "You're missing subcommand name for this command.");
+        //PluginData.getMessageUtil().sendErrorMessage(cs, "You're missing subcommand name for this command.");
         PluginDescriptionFile descr = AutoTeleportPlugin.getPluginInstance().getDescription();
-        MessageUtil.sendErrorMessage(cs, descr.getName()+" - version "+descr.getVersion());
+        PluginData.getMessageUtil().sendErrorMessage(cs, descr.getName()+" - version "+descr.getVersion());
     }
     
     private void sendSubcommandNotFoundErrorMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "Subcommand not found.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "Subcommand not found.");
     }
     
     private void addCommandHandler(String name, AtpCommand handler) {

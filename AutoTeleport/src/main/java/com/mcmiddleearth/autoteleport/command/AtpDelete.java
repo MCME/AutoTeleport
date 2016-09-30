@@ -10,7 +10,7 @@ import com.mcmiddleearth.autoteleport.conversation.ConfirmationFactory;
 import com.mcmiddleearth.autoteleport.conversation.Confirmationable;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,12 +53,12 @@ public class AtpDelete extends AtpCommand implements Confirmationable{
             sendIOErrorMessage(player);
             Logger.getLogger(AtpDelete.class.getName()).log(Level.SEVERE, null, ex);
         }
-        MessageUtil.sendInfoMessage(player, "Teleportation area was deleted.");
+        PluginData.getMessageUtil().sendInfoMessage(player, "Teleportation area was deleted.");
     }
 
     @Override
     public void cancelled(Player player) {
-        MessageUtil.sendErrorMessage(player, "You cancelled deleting of the area.");
+        PluginData.getMessageUtil().sendErrorMessage(player, "You cancelled deleting of the area.");
     }
     
 }

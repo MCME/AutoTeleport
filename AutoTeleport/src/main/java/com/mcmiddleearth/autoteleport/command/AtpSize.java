@@ -9,7 +9,7 @@ import com.mcmiddleearth.autoteleport.data.CuboidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,10 +82,10 @@ Logger.getGlobal().info(xSize+" "+ySize+" "+zSize);
     }
 
     private void sendSizeSetMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Size of teleport area set.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Size of teleport area set.");
     }
 
     private void sendNotANumberMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Invalid argument. Not a whole number.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Invalid argument. Not a whole number.");
     }
 }

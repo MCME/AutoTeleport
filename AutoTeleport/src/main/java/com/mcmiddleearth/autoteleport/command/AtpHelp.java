@@ -5,10 +5,11 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.mcmiddleearth.pluginutils.NumericUtil;
-import com.mcmiddleearth.pluginutils.message.FancyMessage;
-import com.mcmiddleearth.pluginutils.message.MessageType;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.autoteleport.data.PluginData;
+import com.mcmiddleearth.pluginutil.NumericUtil;
+import com.mcmiddleearth.pluginutil.message.FancyMessage;
+import com.mcmiddleearth.pluginutil.message.MessageType;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +41,10 @@ public class AtpHelp extends AtpCommand{
             if(args.length>0 && NumericUtil.isInt(args[0])) {
                 page = NumericUtil.getInt(args[0]);
             }
-            FancyMessage header = new FancyMessage(MessageType.INFO)
+            FancyMessage header = new FancyMessage(MessageType.INFO,PluginData.getMessageUtil())
                                             .addSimple("Help for "
-                                                        +MessageUtil.STRESSED+"AutoTeleport"
-                                                        +MessageUtil.INFO+" commands.");
+                                                        +PluginData.getMessageUtil().STRESSED+"AutoTeleport"
+                                                        +PluginData.getMessageUtil().INFO+" commands.");
             Set<String> keys = commands.keySet();
             List<FancyMessage> list = new ArrayList<>();
             for(String key : keys) {
@@ -61,8 +62,8 @@ public class AtpHelp extends AtpCommand{
                 if(separator < 0) {
                     separator = shortDescription.length();
                 }
-                FancyMessage message = new FancyMessage(MessageType.WHITE)
-                        .addFancy(ChatColor.DARK_AQUA+"/game "+key+ChatColor.WHITE
+                FancyMessage message = new FancyMessage(MessageType.WHITE,PluginData.getMessageUtil())
+                        .addFancy(ChatColor.DARK_AQUA+"/atp "+key+ChatColor.WHITE
                                     +shortDescription.substring(0,separator), 
                                       "/atp "+key, hoverFormat("/atp "+key+usageDescription));
                 if(separator<shortDescription.length()) {
@@ -70,7 +71,7 @@ public class AtpHelp extends AtpCommand{
                 }
                 list.add(message);
             }
-            MessageUtil.sendFancyListMessage((Player) cs, header, list, "/atp help ", page);
+            PluginData.getMessageUtil().sendFancyListMessage((Player) cs, header, list, "/atp help ", page);
         }
         else {
             AtpCommand command = commands.get(args[0]);
@@ -85,7 +86,7 @@ public class AtpHelp extends AtpCommand{
                 if(description!=null){
                     sendHelpStartMessage(cs);
                     int separator = description.indexOf(":");
-                    new FancyMessage(MessageType.WHITE)
+                    new FancyMessage(MessageType.WHITE,PluginData.getMessageUtil())
                                 .addClickable(ChatColor.DARK_AQUA+"/atp "+args[0]
                                                         +(separator>0?description.substring(0, separator):"")
                                                         +ChatColor.WHITE+description.substring(separator), 
@@ -147,19 +148,19 @@ public class AtpHelp extends AtpCommand{
     }
     
     private void sendHelpStartMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Help for "+MessageUtil.STRESSED+"AutoTeleport "+MessageUtil.INFO+"plugin.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Help for "+PluginData.getMessageUtil().STRESSED+"AutoTeleport "+PluginData.getMessageUtil().INFO+"plugin.");
     }
 
     private void sendNoSuchCommandMessage(CommandSender cs, String arg) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no such command.");    
+        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no such command.");    
     }
 
     private void sendNoDescriptionMessage(CommandSender cs, String arg) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no help for this command.");
+        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "/atp "+arg+": There is no help for this command.");
     }
 
    private void sendManualMessage(CommandSender cs) {
-        MessageUtil.sendNoPrefixInfoMessage(cs, "Manual: https://docs.google.com/document/d/1f6pMusnowg2usxeSyNXQ0X1bRnNnMPxocmU1u5FZDAE/edit.");
+        PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "Manual: https://docs.google.com/document/d/1f6pMusnowg2usxeSyNXQ0X1bRnNnMPxocmU1u5FZDAE/edit.");
     }
 
 }

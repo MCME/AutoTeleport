@@ -6,7 +6,7 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,17 +51,17 @@ public class AtpExclude extends AtpCommand{
             sendIOErrorMessage(cs);
             Logger.getLogger(AtpExclude.class.getName()).log(Level.SEVERE, null, ex);
         }
-        MessageUtil.sendInfoMessage(cs, player.getName()+" is now excluded from automated teleport.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, player.getName()+" is now excluded from automated teleport.");
     }
 
     private void sendPlayerNotFoundMessage(CommandSender cs) {
-        MessageUtil.sendErrorMessage(cs, "Player not found.");
+        PluginData.getMessageUtil().sendErrorMessage(cs, "Player not found.");
     }
     
     private void sendExcludedListMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs,"Players excluded from automated teleport:");
+        PluginData.getMessageUtil().sendInfoMessage(cs,"Players excluded from automated teleport:");
         for(OfflinePlayer player: PluginData.excludedPlayers()) {
-            MessageUtil.sendNoPrefixInfoMessage(cs, "- "+player.getName());
+            PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, "- "+player.getName());
         }
     }
     

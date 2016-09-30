@@ -12,7 +12,7 @@ import com.mcmiddleearth.autoteleport.data.CuboidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,18 +117,18 @@ public class AtpSet extends AtpCommand implements Confirmationable{
 
     @Override
     public void cancelled(Player player) {
-        MessageUtil.sendErrorMessage(player, "You cancelled setting of area. No changes were made.");
+        PluginData.getMessageUtil().sendErrorMessage(player, "You cancelled setting of area. No changes were made.");
     }
 
     private void sendCenterSetMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "Center of teleport area was moved to your location.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Center of teleport area was moved to your location.");
     }
 
     private void sendNewAreaMessage(CommandSender cs) {
-        MessageUtil.sendInfoMessage(cs, "New teleport area created.");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "New teleport area created.");
     }
 
     private void sendCenterAndShapeMessage(Player player) {
-        MessageUtil.sendInfoMessage(player, "Center and shape of teleport area was changed.");
+        PluginData.getMessageUtil().sendInfoMessage(player, "Center and shape of teleport area was changed.");
     }
 }

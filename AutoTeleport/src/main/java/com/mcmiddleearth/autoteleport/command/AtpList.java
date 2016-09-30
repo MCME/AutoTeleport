@@ -7,9 +7,9 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutils.message.FancyMessage;
-import com.mcmiddleearth.pluginutils.message.MessageType;
-import com.mcmiddleearth.pluginutils.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.message.FancyMessage;
+import com.mcmiddleearth.pluginutil.message.MessageType;
+import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;
@@ -31,22 +31,22 @@ public class AtpList extends AtpCommand{
     
     @Override
     protected void execute(CommandSender cs, String... args) {
-        MessageUtil.sendInfoMessage(cs, "Teleportation areas:");
+        PluginData.getMessageUtil().sendInfoMessage(cs, "Teleportation areas:");
         for(String areaName : PluginData.getTeleportAreas().keySet()) {
             if(args.length==0 || areaName.startsWith(args[0])) {
                 TeleportationArea area = PluginData.getTeleportationArea(areaName);
                 Location target = area.getTarget();
-                FancyMessage fancyMessage = new FancyMessage(MessageType.INFO_INDENTED);
+                FancyMessage fancyMessage = new FancyMessage(MessageType.INFO_INDENTED,PluginData.getMessageUtil());
                 fancyMessage.addSimple("- ")
-                            .addFancy(MessageUtil.STRESSED+areaName,"/atp warp "+areaName,"Click to warp there.")
-                            .addSimple(MessageUtil.INFO+": "+area.getType()+" -> ");
+                            .addFancy(PluginData.getMessageUtil().STRESSED+areaName,"/atp warp "+areaName,"Click to warp there.")
+                            .addSimple(PluginData.getMessageUtil().INFO+": "+area.getType()+" -> ");
                 if(target!=null) {
-                    fancyMessage.addFancy(MessageUtil.STRESSED+target.getWorld().getName()+"  ",
+                    fancyMessage.addFancy(PluginData.getMessageUtil().STRESSED+target.getWorld().getName()+"  ",
                                           "/atp warp "+areaName+" target",
                                           "Click to warp there.");
                 }
                 else {
-                    fancyMessage.addSimple(MessageUtil.INFO+"NO TARGET");
+                    fancyMessage.addSimple(PluginData.getMessageUtil().INFO+"NO TARGET");
                 }
                 fancyMessage.send((Player)cs);
             }
