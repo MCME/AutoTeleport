@@ -19,6 +19,9 @@ package com.mcmiddleearth.autoteleport.data;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.listener.TeleportationHandler;
 import com.mcmiddleearth.pluginutil.message.MessageUtil;
+import com.mcmiddleearth.pluginutil.region.CuboidRegion;
+import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
+import com.mcmiddleearth.pluginutil.region.SphericalRegion;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -119,7 +123,9 @@ public class PluginData {
     public static void saveData() throws IOException {
         FileConfiguration config = new YamlConfiguration();
         for(String areaName : teleportAreas.keySet()) {
-            config.set(areaName, teleportAreas.get(areaName).serialize());
+            ConfigurationSection section = config.createSection(areaName);
+            teleportAreas.get(areaName).save(section);
+            //config.set(areaName, teleportAreas.get(areaName).serialize());
         }
         config.save(dataFile);    
     }
@@ -129,13 +135,18 @@ public class PluginData {
         try {
             config.load(dataFile);
             for(String areaName : config.getKeys(false)) {
-                if(config.getConfigurationSection(areaName).contains("radius")) {
+                ConfigurationSection section = config.getConfigurationSection(areaName);
+                if(SphericalRegion.isValidConfig(section)) {
                     teleportAreas.put(areaName, 
-                            new SphericalTeleportationArea(config.getConfigurationSection(areaName)));
+                            new SphericalTeleportationArea(section));
                 }
-                else {
+                else if(PrismoidRegion.isValidConfig(section)) {
                     teleportAreas.put(areaName, 
-                            new CuboidTeleportationArea(config.getConfigurationSection(areaName)));
+                            new PrismoidTeleportationArea(section));
+                }
+                else if(CuboidRegion.isValidConfig(section) || section.contains("xSize")) { // xSize is to notice old data format
+                    teleportAreas.put(areaName, 
+                            new CuboidTeleportationArea(section));
                 }
             }
         } catch (IOException | InvalidConfigurationException ex) {

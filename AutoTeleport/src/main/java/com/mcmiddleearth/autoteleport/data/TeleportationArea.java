@@ -17,6 +17,7 @@
 package com.mcmiddleearth.autoteleport.data;
 
 import com.mcmiddleearth.autoteleport.util.DevUtil;
+import com.mcmiddleearth.pluginutil.region.Region;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,9 +40,11 @@ import org.bukkit.entity.Player;
  */
 public abstract class TeleportationArea {
     
-    @Getter
+    /*@Getter
     @Setter
-    private Location center;
+    private Location center;*/
+    
+    protected Region region;
     
     @Getter
     private Location target;
@@ -81,12 +84,18 @@ public abstract class TeleportationArea {
     @Getter
     private boolean armed = false;
     
-    public TeleportationArea(Location center) {
-        this.center = center;
-    }
+    protected TeleportationArea() {}
+    /*public TeleportationArea(Region region) {
+        //this.center = center;
+        this.region = region;
+    }*/
     
     public TeleportationArea(ConfigurationSection config) {
-        this.center = deserializeLocation(config.getConfigurationSection("center"));
+        /*if(config.contains("center")) {
+            this.center = deserializeLocation(config.getConfigurationSection("center"));
+        } else {
+            this.region = 
+        }*/
         this.target = deserializeLocation(config.getConfigurationSection("target"));
         this.dynamic = config.getBoolean("dynamic");
         this.keepOrientation = config.getBoolean("keepOrientation");
@@ -100,9 +109,13 @@ public abstract class TeleportationArea {
         this.recalculateTarget=config.getBoolean("recalculateTarget", recalculateTarget);
     }
     
-    public abstract boolean isNear(Location loc);
+    public boolean isNear(Location loc) {
+        return region.isNear(loc, getPreloadDistance());
+    }
     
-    public abstract boolean isInside(Location loc);
+    public boolean isInside(Location loc) {
+        return region.isInside(loc);
+    }
     
     public void setViewDistance(int distanceInBlocks) {
         this.viewDistance=distanceInBlocks;
@@ -145,7 +158,31 @@ public abstract class TeleportationArea {
         }
     }
     
-    public Map<String, Object> serialize() {
+    public Location getLocation() {
+        return region.getLocation();
+    }
+    
+    public void save(ConfigurationSection config) {
+        region.save(config);
+        if(target!=null) {
+            config.set("target", serializeLocation(this.target));
+        }
+        else {
+            config.set("target", null);
+        }
+        config.set("dynamic", dynamic);
+        config.set("keepOrientation", keepOrientation);
+        config.set("preloadDistance", preloadDistance);
+        config.set("viewDistance", viewDistance);
+        config.set("firstDelay", firstDelay);
+        config.set("teleportDelay", teleportDelay);
+        config.set("velocityDelay", velocityDelay);
+        config.set("velocityReps", velocityReps);
+        config.set("refreshChunks", refreshChunks);
+        config.set("recalculateTarget", recalculateTarget);
+    }
+    
+    /*public Map<String, Object> serialize() {
         Map<String,Object> result = new HashMap();
         result.put("center", serializeLocation(this.center));
         if(target!=null) {
@@ -165,7 +202,7 @@ public abstract class TeleportationArea {
         result.put("refreshChunks", refreshChunks);
         result.put("recalculateTarget", recalculateTarget);
         return result;
-    }
+    }*/
     
     private static Map<String,Object> serializeLocation(Location loc) {
         Map<String,Object> result = new HashMap<>();
@@ -178,7 +215,7 @@ public abstract class TeleportationArea {
         return result;
     }
     
-    private static Location deserializeLocation(ConfigurationSection data) {
+    protected static Location deserializeLocation(ConfigurationSection data) {
         if(data == null) {
             return null;
         }

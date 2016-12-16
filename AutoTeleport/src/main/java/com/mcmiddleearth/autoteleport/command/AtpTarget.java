@@ -52,7 +52,7 @@ public class AtpTarget extends AtpCommand{
                     return;
                 }
             }
-            if(dynamic && !area.getCenter().getWorld().equals(((Player)cs).getWorld())) {
+            if(dynamic && !area.getLocation().getWorld().equals(((Player)cs).getWorld())) {
                 dynamic = false;
                 if(!dynamicByDefault) {
                     sendDynamicToStaticMessage(cs);

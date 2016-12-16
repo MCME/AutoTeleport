@@ -7,13 +7,14 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.CuboidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.PluginData;
+import com.mcmiddleearth.autoteleport.data.PrismoidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -24,7 +25,7 @@ public class AtpSize extends AtpCommand{
     public AtpSize(String... permissionNodes) {
         super(2, true, permissionNodes);
         setShortDescription(": Defines the size of a teleportation area.");
-        setUsageDescription(" <AreaName> <size>: Defines the size of <AreaName>. Size must be a single whole number for spherical areas and three whole numbers separated with whitespaces for cuboid areas.");
+        setUsageDescription(" <AreaName> <size>: Defines the size of <AreaName>. Size must be a single whole number (indicating the radius) for spherical areas and 6 whole numbers (indicating coordinates of opposite corners) separated with whitespaces for cuboid areas.");
     }
     
     @Override
@@ -37,29 +38,40 @@ public class AtpSize extends AtpCommand{
             if(area instanceof SphericalTeleportationArea) {
                 int radius = parseInt(cs, args[1]);
                 if(radius==-1) {
+                    sendNotANumberMessage(cs);
                     return;
                 }
                 ((SphericalTeleportationArea)area).setRadius(radius);
             }
-            else {
-                if(args.length<4) {
+            else if(area instanceof CuboidTeleportationArea) {
+                if(args.length<7) {
                     sendMissingArgumentErrorMessage(cs);
                     return;
                 }
-                Integer xSize = parseInt(cs, args[1]);
-                if(xSize==-1) {
+                int[] data = new int[6];
+                for(int i = 0; i<6; i++) {
+                    data[i] = parseInt(cs, args[i+1]);
+                    if(data[i]==-1) {
+                        sendNotANumberMessage(cs);
+                        return;
+                    }
+                }
+                ((CuboidTeleportationArea)area).setCorners(new Vector(data[0],data[1],data[2]),
+                                                           new Vector(data[3],data[4],data[5]));
+            } else {
+                if(args.length<3) {
+                    sendMissingArgumentErrorMessage(cs);
                     return;
                 }
-                Integer ySize = parseInt(cs, args[2]);
-                if(ySize==-1) {
-                    return;
+                int[] data = new int[2];
+                for(int i = 0; i<2; i++) {
+                    data[i] = parseInt(cs, args[i+1]);
+                    if(data[i]==-1) {
+                        sendNotANumberMessage(cs);
+                        return;
+                    }
                 }
-                Integer zSize = parseInt(cs, args[3]);
-                if(zSize==-1) {
-                    return;
-                }
-Logger.getGlobal().info(xSize+" "+ySize+" "+zSize);
-                ((CuboidTeleportationArea)area).setSize(xSize,ySize,zSize);
+                ((PrismoidTeleportationArea)area).setHeight(data[0],data[1]);
             }
             try {
                 PluginData.saveData();

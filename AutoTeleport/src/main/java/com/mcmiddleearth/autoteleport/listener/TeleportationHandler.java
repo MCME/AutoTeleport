@@ -94,9 +94,9 @@ DevUtil.log("-----> waiting for chunk preloading ");
     private Location calculateTarget() {
         Location newTarget = area.getTarget().clone();
         Location playerLocation = player.getLocation();
-        newTarget.setX(newTarget.getBlockX()-area.getCenter().getBlockX()+playerLocation.getX());
-        newTarget.setY(newTarget.getBlockY()-area.getCenter().getBlockY()+playerLocation.getY());
-        newTarget.setZ(newTarget.getBlockZ()-area.getCenter().getBlockZ()+playerLocation.getZ());
+        newTarget.setX(newTarget.getBlockX()-area.getLocation().getBlockX()+playerLocation.getX());
+        newTarget.setY(newTarget.getBlockY()-area.getLocation().getBlockY()+playerLocation.getY());
+        newTarget.setZ(newTarget.getBlockZ()-area.getLocation().getBlockZ()+playerLocation.getZ());
         if(area.isKeepOrientation()) {
             newTarget.setPitch(playerLocation.getPitch());
             newTarget.setYaw(playerLocation.getYaw());

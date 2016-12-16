@@ -16,8 +16,8 @@
  */
 package com.mcmiddleearth.autoteleport.data;
 
-import static com.mcmiddleearth.autoteleport.data.TeleportationArea.deserializeLocation;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
+import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
@@ -26,53 +26,28 @@ import org.bukkit.util.Vector;
  *
  * @author Eriol_Eandur
  */
-public class CuboidTeleportationArea extends TeleportationArea {
+public class PrismoidTeleportationArea extends TeleportationArea {
     
-    /*@Getter
-    private int sizeX = 1,
-                sizeY = 1,
-                sizeZ = 1;*/
-    
-    public CuboidTeleportationArea(Location center, com.sk89q.worldedit.regions.CuboidRegion weRegion) {
-       region = new CuboidRegion(center, weRegion);
+    public PrismoidTeleportationArea(Location center, com.sk89q.worldedit.regions.Polygonal2DRegion weRegion) {
+       region = new PrismoidRegion(center, weRegion);
     }
     
-    public CuboidTeleportationArea(ConfigurationSection config) {
+    public PrismoidTeleportationArea(ConfigurationSection config) {
         super(config);
-        if(config.contains("center")) {
-            Location center = deserializeLocation(config.getConfigurationSection("center"));
-            int sizeX = config.getInt("xSize");
-            int sizeY = config.getInt("ySize");
-            int sizeZ = config.getInt("zSize");
-            Vector minPos = new Vector(center.getBlockX()-sizeX/2,
-                                       center.getBlockY()-sizeY/2,
-                                       center.getBlockZ()-sizeZ/2);
-            Vector maxPos = new Vector(center.getBlockX()+sizeX/2,
-                                       center.getBlockY()+sizeY/2,
-                                       center.getBlockZ()+sizeZ/2);
-            region = new CuboidRegion(center,minPos, maxPos);
-        } else {
-            region = CuboidRegion.load(config);
-        }
-        /*sizeX = config.getInt("xSize");
-        sizeY = config.getInt("ySize");
-        sizeZ = config.getInt("zSize");*/
-        //region = CuboidRegion.load(config);
+        region = PrismoidRegion.load(config);
     }
     
-    public void setCorners(Vector pos1, Vector pos2) {
-        ((CuboidRegion)region).setCorners(pos1, pos2);
-        /*sizeX = x;
-        sizeY = y;
-        sizeZ = z;*/
-    }
-
-    public Vector getMinPos() {
-        return ((CuboidRegion)region).getMinCorner();
+    public void setHeight(int minY, int maxY) {
+        ((PrismoidRegion)region).setMinY(minY);
+        ((PrismoidRegion)region).setMaxY(maxY);
     }
     
-    public Vector getMaxPos() {
-        return ((CuboidRegion)region).getMaxCorner();
+    public int getMinY() {
+        return ((PrismoidRegion)region).getMinY();
+    }
+    
+    public int getMaxY() {
+        return ((PrismoidRegion)region).getMaxY();
     }
     
     /*@Override

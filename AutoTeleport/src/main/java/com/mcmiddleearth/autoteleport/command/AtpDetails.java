@@ -7,6 +7,7 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.CuboidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.PluginData;
+import com.mcmiddleearth.autoteleport.data.PrismoidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
@@ -37,25 +38,32 @@ public class AtpDetails extends AtpCommand{
         else {
             PluginData.getMessageUtil().sendInfoMessage(cs, "Details for teleportation area "+args[0]+".");
             new FancyMessage(MessageType.HIGHLIGHT_INDENTED,PluginData.getMessageUtil())
-                        .addFancy("Center"+PluginData.getMessageUtil().HIGHLIGHT_STRESSED
-                                                   +": "+ area.getCenter().getWorld().getName()
-                                                   +" "+area.getCenter().getBlockX()
-                                                   +" "+area.getCenter().getBlockY()
-                                                   +" "+area.getCenter().getBlockZ(),
+                        .addFancy("Location"+PluginData.getMessageUtil().HIGHLIGHT_STRESSED
+                                                   +": "+ area.getLocation().getWorld().getName()
+                                                   +" "+area.getLocation().getBlockX()
+                                                   +" "+area.getLocation().getBlockY()
+                                                   +" "+area.getLocation().getBlockZ(),
                                               "/atp warp "+args[0],
                                               "Click to warp to area. Make sure it is not active ;).")
                         .send((Player) cs);
             if(area instanceof CuboidTeleportationArea) {
                 CuboidTeleportationArea cuboid = (CuboidTeleportationArea)area;
-                PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, ChatColor.YELLOW+"Cuboid area with"
-                                                       +" dx="+cuboid.getSizeX()
-                                                       +" dy="+cuboid.getSizeY()
-                                                       +" dz="+cuboid.getSizeZ());
+                PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, ChatColor.YELLOW+"Cuboid area from ("
+                                                                          +cuboid.getMinPos().getBlockX()+","
+                                                                          +cuboid.getMinPos().getBlockY()+","
+                                                                          +cuboid.getMinPos().getBlockZ()+") to ("
+                                                                          +cuboid.getMaxPos().getBlockX()+","
+                                                                          +cuboid.getMaxPos().getBlockY()+","
+                                                                          +cuboid.getMaxPos().getBlockZ()+")");
             }
-            else {
+            else if(area instanceof SphericalTeleportationArea){
                 SphericalTeleportationArea sphere = (SphericalTeleportationArea)area;
                 PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, ChatColor.YELLOW+"Spheric area with "
                                                        +"radius "+sphere.getRadius());
+            } else {
+                PrismoidTeleportationArea prism = (PrismoidTeleportationArea)area;
+                PluginData.getMessageUtil().sendNoPrefixInfoMessage(cs, ChatColor.YELLOW+"Prism area from y="
+                                                       + prism.getMinY()+" to y="+prism.getMaxY());
             }
             Location target = area.getTarget();
             if(target!=null) {

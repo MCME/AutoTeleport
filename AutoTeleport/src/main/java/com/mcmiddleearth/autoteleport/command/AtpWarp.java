@@ -7,7 +7,6 @@ package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
-import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -41,7 +40,7 @@ public class AtpWarp extends AtpCommand{
                     return;
                 }
             }
-            ((Player)cs).teleport(area.getCenter());
+            ((Player)cs).teleport(area.getLocation());
             sendWelcomeToCenter(cs, args[0]);
         }
     }

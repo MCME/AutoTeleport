@@ -16,10 +16,7 @@
  */
 package com.mcmiddleearth.autoteleport.data;
 
-import java.util.Map;
-import java.util.logging.Logger;
-import lombok.Getter;
-import lombok.Setter;
+import com.mcmiddleearth.pluginutil.region.SphericalRegion;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -29,40 +26,49 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class SphericalTeleportationArea extends TeleportationArea {
  
-    @Getter
-    @Setter
-    private int radius;
-    
-    public SphericalTeleportationArea(Location center) {
-        super(center);
+    public SphericalTeleportationArea(Location center, int radius) {
+        region = new SphericalRegion(center,radius);
     }
     
     public SphericalTeleportationArea(ConfigurationSection config) {
         super(config);
-        radius = config.getInt("radius");
+        if(config.contains("center")) {
+            region = new SphericalRegion(deserializeLocation(config.getConfigurationSection("center")),
+                                         config.getInt("radius"));
+        } else {
+            region = SphericalRegion.load(config);
+        }
     }
     
-    public void setSize(int radius) {
-        this.radius = radius;
+    public void setRadius(int radius) {
+        ((SphericalRegion)region).setRadius(radius);
+    }
+    
+    public int getRadius() {
+        return ((SphericalRegion)region).getRadius();
     }
 
-    @Override
+    /*@Override
     public boolean isInside(Location loc) {
-        return getCenter().getWorld().equals(loc.getWorld())
-            && getCenter().distance(loc) <= radius;
-    }
+        return region.isInside(loc);
+        /*return getCenter().getWorld().equals(loc.getWorld())
+            && getCenter().distance(loc) <= radius;*/
+    /*}
     
     @Override
     public boolean isNear(Location loc) {
 //Logger.getGlobal().info("spherical isNear "+getPreloadDistance());
-        return getCenter().getWorld().equals(loc.getWorld())
-            && getCenter().distance(loc) <= radius+getPreloadDistance();
+        /*return getCenter().getWorld().equals(loc.getWorld())
+            && getCenter().distance(loc) <= radius+getPreloadDistance();*/
+    /*    return region.isNear(loc, getPreloadDistance());
     }
     
+    
+    /*
     @Override
     public Map<String,Object> serialize() {
         Map<String,Object> result = super.serialize();
         result.put("radius", radius);
         return result;
-    }
+    }*/
 }
