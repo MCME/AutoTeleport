@@ -25,7 +25,7 @@ public class AtpSize extends AtpCommand{
     public AtpSize(String... permissionNodes) {
         super(2, true, permissionNodes);
         setShortDescription(": Defines the size of a teleportation area.");
-        setUsageDescription(" <AreaName> <size>: Defines the size of <AreaName>. Size must be a single whole number (indicating the radius) for spherical areas and 6 whole numbers (indicating coordinates of opposite corners) separated with whitespaces for cuboid areas.");
+        setUsageDescription(" <AreaName> <size>: Defines the size of <AreaName>. Defines the size of <AreaName>. <size> must be: \nFor spherical areas: <radius>\nFor cuboid areas: <x1 y1 z1 x2 y2 z2> (coords of opposite corners)\nFor prism areas: <y1 y2> (Height range)");
     }
     
     @Override
