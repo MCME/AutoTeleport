@@ -54,6 +54,7 @@ public class AtpCommandExecutor implements CommandExecutor {
         addCommandHandler("size", new AtpSize(permission));
         addCommandHandler("target", new AtpTarget(permission));
         addCommandHandler("warp", new AtpWarp(permission));
+        addCommandHandler("reload", new AtpReload(permission));
     }
     
     @Override

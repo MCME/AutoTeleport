@@ -131,6 +131,7 @@ public class PluginData {
     }
     
     public static void loadData() {
+        teleportAreas.clear();
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(dataFile);
