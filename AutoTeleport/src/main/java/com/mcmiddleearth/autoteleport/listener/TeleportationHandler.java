@@ -20,6 +20,8 @@ import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
 import com.mcmiddleearth.autoteleport.util.DevUtil;
+import com.mcmiddleearth.connect.util.ConnectUtil;
+import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -45,50 +47,55 @@ public class TeleportationHandler {
     
     public void startTeleportation() {
         target = calculateTarget();
-        final Vector vel = player.getVelocity();
-        area.loadTargetChunks();
-        new BukkitRunnable() {
-            
-            int waitTics = 0;
-            @Override
-            public void run() {
-                if(area.isChunkListLoaded()) {
-                    if(waitTics<area.getTeleportDelay()) {
-DevUtil.log("-----> waiting....");
-                        waitTics++;
-                        return;
-                    }
-                    Location loc = target;
-                    if(area.isRecalculateTarget()) {
-                        loc = calculateTarget();
-                    }
-                    player.teleport(loc, TeleportCause.END_PORTAL);  
-DevUtil.log("-----> teleport! "+player.getName()+" "+loc.getBlockX()+" "+loc.getBlockZ());
-                    if(area.isDynamic()) {
-                        new BukkitRunnable() {
-                            int reps=0;
-                            @Override
-                            public void run() {
-                                if(reps<area.getVelocityReps()) {
-DevUtil.log("-----> set velocity");
-                                    player.setVelocity(vel);
-                                    reps++;
+        if(area.getServer() == null || area.getServer().equals("")) {
+            final Vector vel = player.getVelocity();
+            area.loadTargetChunks();
+            new BukkitRunnable() {
+
+                int waitTics = 0;
+                @Override
+                public void run() {
+                    if(area.isChunkListLoaded()) {
+                        if(waitTics<area.getTeleportDelay()) {
+    DevUtil.log("-----> waiting....");
+                            waitTics++;
+                            return;
+                        }
+                        Location loc = target;
+                        if(area.isRecalculateTarget()) {
+                            loc = calculateTarget();
+                        }
+                        player.teleport(loc, TeleportCause.END_PORTAL);  
+    DevUtil.log("-----> teleport! "+player.getName()+" "+loc.getBlockX()+" "+loc.getBlockZ());
+                        if(area.isDynamic()) {
+                            new BukkitRunnable() {
+                                int reps=0;
+                                @Override
+                                public void run() {
+                                    if(reps<area.getVelocityReps()) {
+    DevUtil.log("-----> set velocity");
+                                        player.setVelocity(vel);
+                                        reps++;
+                                    }
+                                    else
+                                    {
+                                        this.cancel();
+                                    }
                                 }
-                                else
-                                {
-                                    this.cancel();
-                                }
-                            }
-                        }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getVelocityDelay(),1);
+                            }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getVelocityDelay(),1);
+                        }
+                        PluginData.ungegisterTeleportation(player);
+                        this.cancel();
                     }
-                    PluginData.ungegisterTeleportation(player);
-                    this.cancel();
+                    else {
+    DevUtil.log("-----> waiting for chunk preloading ");
+                    }
                 }
-                else {
-DevUtil.log("-----> waiting for chunk preloading ");
-                }
-            }
-        }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getFirstDelay(),1);
+            }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getFirstDelay(),1);
+        } else {
+//Logger.getGlobal().info("BungeeTeleport: "+area.getServer()+" "+target.getWorld().getName()+" "+target);
+            ConnectUtil.teleportPlayer(player, area.getServer(), target.getWorld().getName(), target);
+        }
     }
 
     private Location calculateTarget() {

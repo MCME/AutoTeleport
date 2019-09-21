@@ -50,6 +50,9 @@ public abstract class TeleportationArea {
     private Location target;
     
     @Getter
+    private String server;
+    
+    @Getter
     @Setter
     private boolean dynamic;
     
@@ -97,6 +100,7 @@ public abstract class TeleportationArea {
             this.region = 
         }*/
         this.target = deserializeLocation(config.getConfigurationSection("target"));
+        this.server = config.getString("target.server","");
         this.dynamic = config.getBoolean("dynamic");
         this.keepOrientation = config.getBoolean("keepOrientation");
         this.preloadDistance=config.getInt("preloadDistance", preloadDistance);

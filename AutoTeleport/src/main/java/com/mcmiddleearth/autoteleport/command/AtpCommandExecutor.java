@@ -39,6 +39,7 @@ public class AtpCommandExecutor implements CommandExecutor {
     private final Map <String, AtpCommand> commands = new LinkedHashMap <>();
     
     private final String permission = "autoteleport.user";
+    
     public AtpCommandExecutor() {
         addCommandHandler("config", new AtpConfig(permission));
         addCommandHandler("delete", new AtpDelete(permission));
@@ -59,6 +60,7 @@ public class AtpCommandExecutor implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] strings) {
+Logger.getGlobal().info("onCommand");
         if(!string.equalsIgnoreCase("atp")) {
             //return false;
             DevUtil.log("atp would have returned false");            

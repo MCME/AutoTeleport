@@ -5,7 +5,6 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.boydti.fawe.object.FawePlayer;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.conversation.ConfirmationFactory;
 import com.mcmiddleearth.autoteleport.conversation.Confirmationable;
@@ -74,9 +73,9 @@ public class AtpSet extends AtpCommand implements Confirmationable{
                 return;
             }
         } else {
-            //try {
-                region = FawePlayer.wrap(p).getSelection();
-            //} catch (NullPointerException | IncompleteRegionException ex) {}
+            try {
+                region = WorldEdit.getInstance().getSession(p.getName()).getRegion();
+            } catch (NullPointerException | IncompleteRegionException ex) {}
             if(!(region instanceof CuboidRegion || region instanceof Polygonal2DRegion) ) {
                 sendInvalidSelection(p);
                 return;

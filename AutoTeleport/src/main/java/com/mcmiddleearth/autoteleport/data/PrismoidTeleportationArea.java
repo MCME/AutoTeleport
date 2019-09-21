@@ -16,9 +16,11 @@
  */
 package com.mcmiddleearth.autoteleport.data;
 
+import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.util.Vector;
 
 /**
  *
