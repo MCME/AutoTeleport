@@ -53,6 +53,9 @@ public abstract class TeleportationArea {
     private String server;
     
     @Getter
+    private String crossServerWorld;
+    
+    @Getter
     @Setter
     private boolean dynamic;
     
@@ -101,6 +104,10 @@ public abstract class TeleportationArea {
         }*/
         this.target = deserializeLocation(config.getConfigurationSection("target"));
         this.server = config.getString("target.server","");
+        if(!server.equals("")) {
+            crossServerWorld = config.getString("target.world");
+        }
+//        this.crossServerWorld = config.getString("target.crossServerWorld","");
         this.dynamic = config.getBoolean("dynamic");
         this.keepOrientation = config.getBoolean("keepOrientation");
         this.preloadDistance=config.getInt("preloadDistance", preloadDistance);
@@ -224,11 +231,11 @@ public abstract class TeleportationArea {
             return null;
         }
         World world = Bukkit.getWorld(data.getString("world"));
-        if(world == null) {
+        if(world == null && !data.contains("server")) {
             return null;
         }
         else {
-            return new Location(world, (Double) data.get("x"), 
+            return new Location(Bukkit.getWorlds().get(0), (Double) data.get("x"), 
                                        (Double) data.get("y"), 
                                        (Double) data.get("z"), 
                                        ((Double) data.get("yaw")).floatValue(), 

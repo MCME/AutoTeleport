@@ -93,8 +93,9 @@ public class TeleportationHandler {
                 }
             }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getFirstDelay(),1);
         } else {
-//Logger.getGlobal().info("BungeeTeleport: "+area.getServer()+" "+target.getWorld().getName()+" "+target);
-            ConnectUtil.teleportPlayer(player, area.getServer(), target.getWorld().getName(), target);
+Logger.getGlobal().info("BungeeTeleport: "+area.getServer()+" "+target.getWorld()+" "+target);
+            ConnectUtil.teleportPlayer(player, area.getServer(), area.getCrossServerWorld(), target);
+            PluginData.ungegisterTeleportation(player);
         }
     }
 
