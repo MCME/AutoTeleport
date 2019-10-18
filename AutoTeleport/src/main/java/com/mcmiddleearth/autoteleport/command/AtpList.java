@@ -12,6 +12,7 @@ import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,8 +52,14 @@ public class AtpList extends AtpCommand{
                 message.addSimple("- ")
                             .addFancy(PluginData.getMessageUtil().STRESSED+areaName,"/atp warp "+areaName,"Click to warp there.")
                             .addSimple(PluginData.getMessageUtil().INFO+": "+area.getType()+" -> ");
-                if(target!=null) {
-                    message.addFancy(PluginData.getMessageUtil().STRESSED+target.getWorld().getName()+"  ",
+                if(target!=null && (target.getWorld()!=null || !area.getServer().equals(""))) {
+                    String name;
+                    if(area.getServer().equals("")) {
+                        name = target.getWorld().getName();
+                    } else {
+                        name = ChatColor.RED+area.getServer()+":"+area.getCrossServerWorld();
+                    }
+                    message.addFancy(PluginData.getMessageUtil().STRESSED+name+"  ",
                                           "/atp warp "+areaName+" target",
                                           "Click to warp there.");
                 }

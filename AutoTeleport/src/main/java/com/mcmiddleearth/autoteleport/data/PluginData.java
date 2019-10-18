@@ -124,7 +124,10 @@ public class PluginData {
         FileConfiguration config = new YamlConfiguration();
         for(String areaName : teleportAreas.keySet()) {
             ConfigurationSection section = config.createSection(areaName);
-            teleportAreas.get(areaName).save(section);
+            TeleportationArea area = teleportAreas.get(areaName);
+            if(area.getLocation().getWorld()!=null) {
+                area.save(section);
+            }
             //config.set(areaName, teleportAreas.get(areaName).serialize());
         }
         config.save(dataFile);    

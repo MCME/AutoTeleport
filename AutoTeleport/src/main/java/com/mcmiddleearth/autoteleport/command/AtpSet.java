@@ -85,6 +85,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
         if(area==null) {
             if(notSpherical) {
                 if(region instanceof CuboidRegion) {
+//Logger.getGlobal().info("loc: "+location.getWorld().getName()+" region: "+region.getWorld().getName());
                     area = new CuboidTeleportationArea(location, (CuboidRegion)region);
                 } else {
                     area = new PrismoidTeleportationArea(location, (Polygonal2DRegion)region);
@@ -94,6 +95,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
                 area = new SphericalTeleportationArea(location, radius);
             }
             PluginData.addTeleportationArea(areaName, area);
+//Logger.getGlobal().info("loc: "+area.getLocation().getWorld());
             saveData(cs);
             sendNewAreaMessage(cs);
         }

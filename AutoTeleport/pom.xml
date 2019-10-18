@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mcmiddleearth.com</groupId>
     <artifactId>AutoTeleport</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,6 +26,7 @@
         </plugins>
         <resources>
           <resource>
+            <filtering>true</filtering>
             <directory>${basedir}/src/main/resources</directory>
             <includes>
                 <include>plugin.yml</include>
@@ -59,6 +60,13 @@
             <artifactId>guava</artifactId>
             <version>18.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mcmiddleearth</groupId>
+            <artifactId>MCME-Connect</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.mcmiddleearth</groupId>
