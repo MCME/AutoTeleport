@@ -1,10 +1,13 @@
-name: AutoTeleport
+name: ${project.artifactId}
 main: com.mcmiddleearth.autoteleport.AutoTeleportPlugin
-version: 1.1.0
+version: ${project.version}
+author: Eriol_Eandur
 description: automated teleportation plugin
 load: POSTWORLD
 softdepend: [ProtocolLib]
 softdepend: [Multiverse-Core]
+api-version: 1.13
+
 commands:
     atp:
         description: manage auto teleport areas

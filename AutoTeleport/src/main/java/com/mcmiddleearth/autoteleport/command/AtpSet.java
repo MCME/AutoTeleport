@@ -5,6 +5,7 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
+import com.boydti.fawe.object.FawePlayer;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.conversation.ConfirmationFactory;
 import com.mcmiddleearth.autoteleport.conversation.Confirmationable;
@@ -73,9 +74,9 @@ public class AtpSet extends AtpCommand implements Confirmationable{
                 return;
             }
         } else {
-            try {
-                region = WorldEdit.getInstance().getSession(p.getName()).getRegion();
-            } catch (NullPointerException | IncompleteRegionException ex) {}
+            //try {
+                region = FawePlayer.wrap(p).getSelection();
+            //} catch (NullPointerException | IncompleteRegionException ex) {}
             if(!(region instanceof CuboidRegion || region instanceof Polygonal2DRegion) ) {
                 sendInvalidSelection(p);
                 return;
@@ -84,6 +85,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
         if(area==null) {
             if(notSpherical) {
                 if(region instanceof CuboidRegion) {
+//Logger.getGlobal().info("loc: "+location.getWorld().getName()+" region: "+region.getWorld().getName());
                     area = new CuboidTeleportationArea(location, (CuboidRegion)region);
                 } else {
                     area = new PrismoidTeleportationArea(location, (Polygonal2DRegion)region);
@@ -93,6 +95,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
                 area = new SphericalTeleportationArea(location, radius);
             }
             PluginData.addTeleportationArea(areaName, area);
+//Logger.getGlobal().info("loc: "+area.getLocation().getWorld());
             saveData(cs);
             sendNewAreaMessage(cs);
         }
