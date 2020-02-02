@@ -70,16 +70,16 @@ DevUtil.log(2,"player quit");
         }
     }
     
-    @EventHandler
+    /*@EventHandler
     public void chunkUnload(ChunkUnloadEvent event) {
         for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
             if(area.isNeeded(event.getChunk())) {
-                event.setCancelled(true);
+                //event.setCancelled(true);
 DevUtil.log(2,"cancelling unload");
                 return;
             }
         }
-    }
+    }*/
     
     @EventHandler
     public void chunkLoad(ChunkLoadEvent event) {
