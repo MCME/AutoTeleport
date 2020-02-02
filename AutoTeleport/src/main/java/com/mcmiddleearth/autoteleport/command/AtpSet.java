@@ -5,7 +5,6 @@
  */
 package com.mcmiddleearth.autoteleport.command;
 
-import com.boydti.fawe.object.FawePlayer;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.conversation.ConfirmationFactory;
 import com.mcmiddleearth.autoteleport.conversation.Confirmationable;
@@ -14,9 +13,8 @@ import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.PrismoidTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.SphericalTeleportationArea;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
+import com.mcmiddleearth.pluginutil.WEUtil;
 import com.mcmiddleearth.pluginutil.NumericUtil;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.regions.Region;
@@ -75,7 +73,7 @@ public class AtpSet extends AtpCommand implements Confirmationable{
             }
         } else {
             //try {
-                region = FawePlayer.wrap(p).getSelection();
+                region = WEUtil.getSelection(p);
             //} catch (NullPointerException | IncompleteRegionException ex) {}
             if(!(region instanceof CuboidRegion || region instanceof Polygonal2DRegion) ) {
                 sendInvalidSelection(p);
