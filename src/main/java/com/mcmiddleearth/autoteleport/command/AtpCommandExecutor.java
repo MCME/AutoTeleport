@@ -19,15 +19,14 @@ package com.mcmiddleearth.autoteleport.command;
 import com.mcmiddleearth.autoteleport.AutoTeleportPlugin;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.util.DevUtil;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
+
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -35,10 +34,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
  */
 public class AtpCommandExecutor implements CommandExecutor {
 
-    @Getter
     private final Map <String, AtpCommand> commands = new LinkedHashMap <>();
     
     private final String permission = "autoteleport.user";
+
     public AtpCommandExecutor() {
         addCommandHandler("config", new AtpConfig(permission));
         addCommandHandler("delete", new AtpDelete(permission));
@@ -88,5 +87,8 @@ public class AtpCommandExecutor implements CommandExecutor {
     private void addCommandHandler(String name, AtpCommand handler) {
         commands.put(name, handler);
     }
-    
+
+    public Map<String, AtpCommand> getCommands() {
+        return commands;
+    }
 }

@@ -29,31 +29,30 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
- *
  * @author Eriol_Eandur
  */
-public class AutoTeleportListener implements Listener{
-    
+public class AutoTeleportListener implements Listener {
+
     @EventHandler
     public void playerMove(PlayerMoveEvent event) {
-        if(PluginData.isStopped() 
-                || PluginData.isExcluded(event.getPlayer()) 
+        if (PluginData.isStopped()
+                || PluginData.isExcluded(event.getPlayer())
                 || PluginData.isInTeleportation(event.getPlayer())) {
             return;
         }
         final Player player = event.getPlayer();
         Location playerLocation = player.getLocation();
-        for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
-            if(area.getTarget()!=null) {
-               if(area.isNear(playerLocation)) { 
-DevUtil.log("-----> nearArea "+area.isArmed());
+        for (TeleportationArea area : PluginData.getTeleportAreas().values()) {
+            if (area.getTarget() != null) {
+                if (area.isNear(playerLocation)) {
+                    DevUtil.log("-----> nearArea " + area.isArmed());
                     area.addNearPlayer(player);
                 } else {
                     area.remove(player);
                 }
             }
-            if(area.getTarget()!=null && area.isInside(playerLocation)) {
-DevUtil.log("-----> inArea");
+            if (area.getTarget() != null && area.isInside(playerLocation)) {
+                DevUtil.log("-----> inArea");
                 TeleportationHandler handler = new TeleportationHandler(player, area);
                 PluginData.registerTeleportation(player, handler);
                 handler.startTeleportation();
@@ -61,31 +60,19 @@ DevUtil.log("-----> inArea");
             }
         }
     }
-    
+
     @EventHandler
     public void playerLeave(PlayerQuitEvent event) {
-        for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
+        for (TeleportationArea area : PluginData.getTeleportAreas().values()) {
             area.remove(event.getPlayer());
-DevUtil.log(2,"player quit");
+            DevUtil.log(2, "player quit");
         }
     }
-    
-    /*@EventHandler
-    public void chunkUnload(ChunkUnloadEvent event) {
-        for(TeleportationArea area : PluginData.getTeleportAreas().values()) {
-            if(area.isNeeded(event.getChunk())) {
-                //event.setCancelled(true);
-DevUtil.log(2,"cancelling unload");
-                return;
-            }
-        }
-    }*/
     
     @EventHandler
     public void chunkLoad(ChunkLoadEvent event) {
-DevUtil.log(2,"Load chunk: "+event.getChunk().getX()+" "+event.getChunk().getZ());
+        DevUtil.log(2, "Load chunk: " + event.getChunk().getX() + " " + event.getChunk().getZ());
     }
-    
-    
+
 }
 

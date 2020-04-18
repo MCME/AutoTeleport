@@ -22,15 +22,6 @@ import com.mcmiddleearth.pluginutil.message.MessageUtil;
 import com.mcmiddleearth.pluginutil.region.CuboidRegion;
 import com.mcmiddleearth.pluginutil.region.PrismoidRegion;
 import com.mcmiddleearth.pluginutil.region.SphericalRegion;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -39,27 +30,23 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
 /**
  *
  * @author Eriol_Eandur
  */
 public class PluginData {
     
-    @Getter
     private static final MessageUtil messageUtil = new MessageUtil();
-    
-    @Getter
     private final static Map<String, TeleportationArea> teleportAreas = new HashMap<>();
-    
     private final static List<UUID> excludedPlayers = new ArrayList<>();
-    
     private final static Map<UUID,TeleportationHandler> currentTeleportations = new HashMap<>();
     
-    @Getter
-    @Setter
     private static boolean stopped = false;
     
-    @Getter
     private static final File dataFile = new File(AutoTeleportPlugin.getPluginInstance().getDataFolder(),
                                                   File.separator+"PluginData.yml");
     
@@ -156,5 +143,25 @@ public class PluginData {
         } catch (IOException | InvalidConfigurationException ex) {
             //Logger.getLogger(PluginData.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static MessageUtil getMessageUtil() {
+        return messageUtil;
+    }
+
+    public static Map<String, TeleportationArea> getTeleportAreas() {
+        return teleportAreas;
+    }
+
+    public static boolean isStopped() {
+        return stopped;
+    }
+
+    public static void setStopped(boolean stopped) {
+        PluginData.stopped = stopped;
+    }
+
+    public static File getDataFile() {
+        return dataFile;
     }
 }
