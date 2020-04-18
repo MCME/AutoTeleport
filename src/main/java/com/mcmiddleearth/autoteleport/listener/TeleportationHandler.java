@@ -28,69 +28,67 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 /**
- *
  * @author Eriol_Eandur
  */
 public class TeleportationHandler {
 
     private final TeleportationArea area;
-    
+
     final Player player;
-    
+
     Location target;
-    
+
     public TeleportationHandler(Player player, TeleportationArea area) {
         this.player = player;
         this.area = area;
     }
-    
+
     public void startTeleportation() {
         target = calculateTarget();
-        if(area.getServer() == null || area.getServer().equals("")) {
+        if (area.getServer() == null || area.getServer().equals("")) {
             final Vector vel = player.getVelocity();
             area.loadTargetChunks();
             new BukkitRunnable() {
 
                 int waitTics = 0;
+
                 @Override
                 public void run() {
-                    if(area.isChunkListLoaded()) {
-                        if(waitTics<area.getTeleportDelay()) {
-    DevUtil.log("-----> waiting....");
+                    if (area.isChunkListLoaded()) {
+                        if (waitTics < area.getTeleportDelay()) {
+                            DevUtil.log("-----> waiting....");
                             waitTics++;
                             return;
                         }
                         Location loc = target;
-                        if(area.isRecalculateTarget()) {
+                        if (area.isRecalculateTarget()) {
                             loc = calculateTarget();
                         }
-                        player.teleport(loc, TeleportCause.END_PORTAL);  
-    DevUtil.log("-----> teleport! "+player.getName()+" "+loc.getBlockX()+" "+loc.getBlockZ());
-                        if(area.isDynamic()) {
+                        player.teleport(loc, TeleportCause.END_PORTAL);
+                        DevUtil.log("-----> teleport! " + player.getName() + " " + loc.getBlockX() + " " + loc.getBlockZ());
+                        if (area.isDynamic()) {
                             new BukkitRunnable() {
-                                int reps=0;
+                                int reps = 0;
+
                                 @Override
                                 public void run() {
-                                    if(reps<area.getVelocityReps()) {
-    DevUtil.log("-----> set velocity");
+                                    if (reps < area.getVelocityReps()) {
+                                        DevUtil.log("-----> set velocity");
                                         player.setVelocity(vel);
                                         reps++;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         this.cancel();
                                     }
                                 }
-                            }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getVelocityDelay(),1);
+                            }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(), area.getVelocityDelay(), 1);
                         }
                         PluginData.ungegisterTeleportation(player);
                         this.cancel();
-                    }
-                    else {
-    DevUtil.log("-----> waiting for chunk preloading ");
+                    } else {
+                        DevUtil.log("-----> waiting for chunk preloading ");
                     }
                 }
-            }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(),area.getFirstDelay(),1);
+            }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(), area.getFirstDelay(), 1);
         } else {
             ConnectUtil.teleportPlayer(player, area.getServer(), area.getCrossServerWorld(), target);
             new BukkitRunnable() {
@@ -105,10 +103,10 @@ public class TeleportationHandler {
     private Location calculateTarget() {
         Location newTarget = area.getTarget().clone();
         Location playerLocation = player.getLocation();
-        newTarget.setX(newTarget.getBlockX()-area.getLocation().getBlockX()+playerLocation.getX());
-        newTarget.setY(newTarget.getBlockY()-area.getLocation().getBlockY()+playerLocation.getY());
-        newTarget.setZ(newTarget.getBlockZ()-area.getLocation().getBlockZ()+playerLocation.getZ());
-        if(area.isKeepOrientation()) {
+        newTarget.setX(newTarget.getBlockX() - area.getLocation().getBlockX() + playerLocation.getX());
+        newTarget.setY(newTarget.getBlockY() - area.getLocation().getBlockY() + playerLocation.getY());
+        newTarget.setZ(newTarget.getBlockZ() - area.getLocation().getBlockZ() + playerLocation.getZ());
+        if (area.isKeepOrientation()) {
             newTarget.setPitch(playerLocation.getPitch());
             newTarget.setYaw(playerLocation.getYaw());
         }

@@ -71,7 +71,7 @@ public class AtpConfig extends AtpCommand{
                 area.setPreloadDistance(Integer.parseInt(args[2]));
                 break;
             case 'd':
-Logger.getGlobal().info("call set view Distance");
+                Logger.getGlobal().info("call set view Distance");
                 area.setViewDistance(Integer.parseInt(args[2]));
                 break;
             case 'f':

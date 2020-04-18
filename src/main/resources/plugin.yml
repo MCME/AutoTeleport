@@ -4,9 +4,9 @@ version: ${project.version}
 author: Eriol_Eandur
 description: automated teleportation plugin
 load: POSTWORLD
-softdepend: [ProtocolLib]
-softdepend: [Multiverse-Core]
-api-version: 1.13
+softdepend: [bukkit, guava, MCME-Connect, worldedit-core, worldedit-bukkit]
+depend: [PluginUtils]
+api-version: 1.15
 
 commands:
     atp:

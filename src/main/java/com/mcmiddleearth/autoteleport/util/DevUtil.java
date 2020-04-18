@@ -16,16 +16,15 @@
  */
 package com.mcmiddleearth.autoteleport.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,12 +37,8 @@ public class DevUtil {
     private static final String PREFIX = ""+ChatColor.BOLD+ChatColor.GOLD;
     private static final String PLUGIN = "[ATP] ";
     
-    @Setter
-    @Getter
     private static boolean consoleOutput = false;
-    
-    @Setter
-    @Getter
+
     private static int level = 1;
     
     public static void log(String message) {
@@ -86,4 +81,19 @@ public class DevUtil {
         return devs;
     }
 
+    public static boolean isConsoleOutput() {
+        return consoleOutput;
+    }
+
+    public static void setConsoleOutput(boolean consoleOutput) {
+        DevUtil.consoleOutput = consoleOutput;
+    }
+
+    public static int getLevel() {
+        return level;
+    }
+
+    public static void setLevel(int level) {
+        DevUtil.level = level;
+    }
 }

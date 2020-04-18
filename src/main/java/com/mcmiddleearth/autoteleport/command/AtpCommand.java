@@ -6,8 +6,6 @@
 package com.mcmiddleearth.autoteleport.command;
 
 import com.mcmiddleearth.autoteleport.data.PluginData;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,13 +18,9 @@ public abstract class AtpCommand {
     
     private final String[] permissionNodes;
     
-    @Getter
     private final int minArgs;
     
     private boolean playerOnly = true;
-    
-    @Getter
-    @Setter
     private String usageDescription, shortDescription;
     
     public AtpCommand(int minArgs, boolean playerOnly, String... permissionNodes) {
@@ -98,5 +92,25 @@ public abstract class AtpCommand {
 
     protected void sendIOErrorMessage(CommandSender cs) {
         PluginData.getMessageUtil().sendErrorMessage(cs, "There was an error. Teleportation data were NOT saved.");
+    }
+
+    public int getMinArgs() {
+        return minArgs;
+    }
+
+    public String getUsageDescription() {
+        return usageDescription;
+    }
+
+    public void setUsageDescription(String usageDescription) {
+        this.usageDescription = usageDescription;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 }
