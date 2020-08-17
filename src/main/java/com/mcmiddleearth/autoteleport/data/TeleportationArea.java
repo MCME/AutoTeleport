@@ -140,6 +140,10 @@ public abstract class TeleportationArea {
         } else {
             config.set("target", null);
         }
+        if (!server.equals("")) {
+            config.set("target.server", server);
+            config.set("target.world", crossServerWorld);
+        }
         config.set("dynamic", dynamic);
         config.set("keepOrientation", keepOrientation);
         config.set("preloadDistance", preloadDistance);
