@@ -60,6 +60,7 @@ public abstract class TeleportationArea {
     private boolean armed = false;
 
     protected TeleportationArea() {
+        server = "";
     }
 
     public TeleportationArea(ConfigurationSection config) {
