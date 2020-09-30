@@ -60,6 +60,7 @@ public abstract class TeleportationArea {
     private boolean armed = false;
 
     protected TeleportationArea() {
+        server = "";
     }
 
     public TeleportationArea(ConfigurationSection config) {
@@ -136,13 +137,14 @@ public abstract class TeleportationArea {
     public void save(ConfigurationSection config) {
         region.save(config);
         if (target != null) {
-            config.set("target", serializeLocation(this.target));
+            Map<String,Object> targetMap = serializeLocation(this.target);
+            if (!server.equals("")) {
+                targetMap.put("server", server);
+                targetMap.put("world", crossServerWorld);
+            }
+            config.set("target", targetMap);
         } else {
             config.set("target", null);
-        }
-        if (!server.equals("")) {
-            config.set("target.server", server);
-            config.set("target.world", crossServerWorld);
         }
         config.set("dynamic", dynamic);
         config.set("keepOrientation", keepOrientation);
