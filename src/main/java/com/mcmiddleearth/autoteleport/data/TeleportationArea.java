@@ -238,7 +238,7 @@ public abstract class TeleportationArea {
     }
 
     private void getTargetChunks() {
-        if (!targetChunks.isEmpty()) {
+        /*if (!targetChunks.isEmpty()) { //removed preloading
             return;
         }
         if (target != null) {
@@ -258,24 +258,24 @@ public abstract class TeleportationArea {
             DevUtil.log("-----> getting " + targetChunks.size() + " chunks.");
         } else {
             DevUtil.log("No chunks got as no target set.");
-        }
+        }*/
     }
 
     public void loadTargetChunks() {
-        for (Chunk chunk : targetChunks) {
+        /*for (Chunk chunk : targetChunks) { //removed preloading
             if (!chunk.isLoaded()) {
                 chunk.load();
             }
         }
-        DevUtil.log("loading " + targetChunks.size() + " chunks.");
+        DevUtil.log("loading " + targetChunks.size() + " chunks.");*/
     }
 
     public boolean isChunkListLoaded() {
-        for (Chunk chunk : targetChunks) {
+        /*for (Chunk chunk : targetChunks) { removed preloading
             if (!chunk.isLoaded()) {
                 return false;
             }
-        }
+        }*/
         return true;
     }
 
