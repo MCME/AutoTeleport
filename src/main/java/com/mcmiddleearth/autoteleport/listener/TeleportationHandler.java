@@ -102,6 +102,9 @@ public class TeleportationHandler {
 
     private Location calculateTarget() {
         Location newTarget = area.getTarget().clone();
+        if(area.isTargetFixed()) {
+            return newTarget;
+        }
         Location playerLocation = player.getLocation();
         newTarget.setX(newTarget.getBlockX() - area.getLocation().getBlockX() + playerLocation.getX());
         newTarget.setY(newTarget.getBlockY() - area.getLocation().getBlockY() + playerLocation.getY());
