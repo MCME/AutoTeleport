@@ -37,6 +37,7 @@ public abstract class TeleportationArea {
     private String crossServerWorld;
 
     private Location target;
+    private boolean targetFixed;
 
     private boolean dynamic;
     private boolean keepOrientation;
@@ -79,6 +80,7 @@ public abstract class TeleportationArea {
         this.velocityReps = config.getInt("velocityReps", velocityReps);
         this.refreshChunks = config.getBoolean("refreshChunks", refreshChunks);
         this.recalculateTarget = config.getBoolean("recalculateTarget", recalculateTarget);
+        this.targetFixed = config.getBoolean("fixedTarget", false);
     }
 
     public boolean isNear(Location loc) {
@@ -156,6 +158,7 @@ public abstract class TeleportationArea {
         config.set("velocityReps", velocityReps);
         config.set("refreshChunks", refreshChunks);
         config.set("recalculateTarget", recalculateTarget);
+        config.set("fixedTarget", targetFixed);
     }
 
     private static Map<String, Object> serializeLocation(Location loc) {
@@ -369,5 +372,9 @@ public abstract class TeleportationArea {
 
     public boolean isArmed() {
         return armed;
+    }
+
+    public boolean isTargetFixed() {
+        return targetFixed;
     }
 }
