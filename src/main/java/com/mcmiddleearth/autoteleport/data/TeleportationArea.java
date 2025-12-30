@@ -35,6 +35,9 @@ public abstract class TeleportationArea {
     protected Region region;
     private String server;
     private String crossServerWorld;
+    private String requiredTeleportPermission;
+    private String deniedMessage;
+    private Map<UUID, Integer> lastDeniedMessageTime = new HashMap<>();
 
     private Location target;
     private boolean targetFixed;
@@ -81,6 +84,8 @@ public abstract class TeleportationArea {
         this.refreshChunks = config.getBoolean("refreshChunks", refreshChunks);
         this.recalculateTarget = config.getBoolean("recalculateTarget", recalculateTarget);
         this.targetFixed = config.getBoolean("fixedTarget", false);
+        this.requiredTeleportPermission = config.getString("teleportPermission", null);
+        this.deniedMessage = config.getString("deniedMessage", null);
     }
 
     public boolean isNear(Location loc) {
@@ -89,6 +94,14 @@ public abstract class TeleportationArea {
 
     public boolean isInside(Location loc) {
         return region.isInside(loc);
+    }
+
+    public void setLastDeniedMessageTime(UUID player, int time) {
+        lastDeniedMessageTime.put(player, time);
+    }
+
+    public int getLastDeniedMessageTime(UUID player) {
+        return lastDeniedMessageTime.getOrDefault(player, -1);
     }
 
     public void setViewDistance(int distanceInBlocks) {
@@ -159,6 +172,12 @@ public abstract class TeleportationArea {
         config.set("refreshChunks", refreshChunks);
         config.set("recalculateTarget", recalculateTarget);
         config.set("fixedTarget", targetFixed);
+        if(requiredTeleportPermission!=null) {
+            config.set("teleportPermission", requiredTeleportPermission);
+        }
+        if(deniedMessage != null) {
+            config.set("deniedMessage", deniedMessage);
+        }
     }
 
     private static Map<String, Object> serializeLocation(Location loc) {
@@ -376,5 +395,13 @@ public abstract class TeleportationArea {
 
     public boolean isTargetFixed() {
         return targetFixed;
+    }
+
+    public boolean hasPermission(Player player) {
+        return requiredTeleportPermission == null || player.hasPermission(requiredTeleportPermission);
+    }
+
+    public String getDeniedMessage() {
+        return deniedMessage;
     }
 }

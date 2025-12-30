@@ -19,6 +19,7 @@ package com.mcmiddleearth.autoteleport.listener;
 import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
 import com.mcmiddleearth.autoteleport.util.DevUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,11 +53,20 @@ public class AutoTeleportListener implements Listener {
                 }
             }
             if (area.getTarget() != null && area.isInside(playerLocation)) {
-                DevUtil.log("-----> inArea");
-                TeleportationHandler handler = new TeleportationHandler(player, area);
-                PluginData.registerTeleportation(player, handler);
-                handler.startTeleportation();
-                return;
+                if (area.hasPermission(player)) {
+                    DevUtil.log("-----> inArea");
+                    TeleportationHandler handler = new TeleportationHandler(player, area);
+                    PluginData.registerTeleportation(player, handler);
+                    handler.startTeleportation();
+                    return;
+                } else {
+                    DevUtil.log("-----> noPermission");
+                    int lastDeniedMessageTime = area.getLastDeniedMessageTime(player.getUniqueId());
+                    if(lastDeniedMessageTime<0 || Bukkit.getServer().getCurrentTick()-lastDeniedMessageTime > 200) {
+                        area.setLastDeniedMessageTime(player.getUniqueId(), Bukkit.getServer().getCurrentTick());
+                        player.sendMessage(area.getDeniedMessage());
+                    }
+                }
             }
         }
     }
