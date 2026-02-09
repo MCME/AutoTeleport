@@ -21,11 +21,17 @@ import com.mcmiddleearth.autoteleport.data.PluginData;
 import com.mcmiddleearth.autoteleport.data.TeleportationArea;
 import com.mcmiddleearth.autoteleport.util.DevUtil;
 import com.mcmiddleearth.connect.util.ConnectUtil;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.time.Duration;
 
 /**
  * @author Eriol_Eandur
@@ -90,7 +96,25 @@ public class TeleportationHandler {
                 }
             }.runTaskTimer(AutoTeleportPlugin.getPluginInstance(), area.getFirstDelay(), 1);
         } else {
-            ConnectUtil.teleportPlayer(player, area.getServer(), area.getCrossServerWorld(), target);
+            if(area.isDoubleTeleportation()) {
+                String[] tpTransitionTimes = new String[]{"5","10","5"};
+                Title.Times times = Title.Times.times(Duration.ofMillis(Integer.parseInt(tpTransitionTimes[0])*50L),
+                        Duration.ofMillis(Integer.parseInt(tpTransitionTimes[1])*50L),
+                        Duration.ofMillis(Integer.parseInt(tpTransitionTimes[2])*50L));
+                Title black = Title.title(Component.text("\uE01f").font(Key.key("fade_black")), Component.empty(), times);//{"text":"\uE01f","font":"fade_black"}, Component.empty(),times);
+                player.showTitle(black);
+                Bukkit.getScheduler().runTaskLater(AutoTeleportPlugin.getPluginInstance(), ()-> {
+                    player.teleport(area.getPreTarget(), TeleportCause.PLUGIN);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            ConnectUtil.teleportPlayer(player, area.getServer(), area.getCrossServerWorld(), target);
+                        }
+                    }.runTaskLater(AutoTeleportPlugin.getPluginInstance(), 1);
+                }, 5);
+            } else {
+                ConnectUtil.teleportPlayer(player, area.getServer(), area.getCrossServerWorld(), target);
+            }
             new BukkitRunnable() {
                 @Override
                 public void run() {

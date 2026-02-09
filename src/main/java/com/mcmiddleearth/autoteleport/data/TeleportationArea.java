@@ -16,7 +16,6 @@
  */
 package com.mcmiddleearth.autoteleport.data;
 
-import com.mcmiddleearth.autoteleport.util.DevUtil;
 import com.mcmiddleearth.pluginutil.region.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -39,7 +38,7 @@ public abstract class TeleportationArea {
     private String deniedMessage;
     private Map<UUID, Integer> lastDeniedMessageTime = new HashMap<>();
 
-    private Location target;
+    private Location target, preTarget;
     private boolean targetFixed;
 
     private boolean dynamic;
@@ -73,6 +72,7 @@ public abstract class TeleportationArea {
             crossServerWorld = config.getString("target.world");
         }
         this.target = deserializeLocation(config.getConfigurationSection("target"));
+        this.preTarget = deserializeLocation(config.getConfigurationSection("preTarget"));
         this.dynamic = config.getBoolean("dynamic");
         this.keepOrientation = config.getBoolean("keepOrientation");
         this.preloadDistance = config.getInt("preloadDistance", preloadDistance);
@@ -403,5 +403,13 @@ public abstract class TeleportationArea {
 
     public String getDeniedMessage() {
         return deniedMessage;
+    }
+
+    public boolean isDoubleTeleportation() {
+        return preTarget != null;
+    }
+
+    public Location getPreTarget() {
+        return preTarget;
     }
 }
