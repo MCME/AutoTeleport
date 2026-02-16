@@ -161,6 +161,9 @@ public abstract class TeleportationArea {
         } else {
             config.set("target", null);
         }
+        if (preTarget != null) {
+            config.set("preTarget", serializeLocation(this.preTarget));
+        }
         config.set("dynamic", dynamic);
         config.set("keepOrientation", keepOrientation);
         config.set("preloadDistance", preloadDistance);
